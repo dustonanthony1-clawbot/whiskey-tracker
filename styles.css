@@ -51,6 +51,36 @@ header .hero {
   margin-bottom: 36px;
 }
 
+header .hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 36px;
+}
+
+header .logo-graphics {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+header .bottle-svg {
+  width: 48px;
+  height: 100px;
+  filter: drop-shadow(0 4px 12px rgba(212, 168, 75, 0.3));
+}
+
+header .glass-svg {
+  width: 32px;
+  height: 48px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 8px rgba(212, 168, 75, 0.2));
+}
+
+header .hero-text {
+  flex: 1;
+}
+
 header .hero h1 {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 2.75rem;
@@ -255,40 +285,49 @@ header .stat-label {
 }
 
 .whiskey-card .card-content {
-  padding: 24px;
+  padding: 20px;
+  text-align: center;
 }
 
 .whiskey-card .name {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.35rem;
+  font-size: 1.15rem;
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   color: var(--text-primary);
   letter-spacing: -0.01em;
+  line-height: 1.3;
+  word-break: break-word;
 }
 
 .whiskey-card .distillery {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 4px;
 }
 
 .whiskey-card .meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
+  gap: 6px;
+  margin-bottom: 12px;
+  justify-content: center;
 }
 
 .whiskey-card .tag {
   background: var(--accent-dim);
   color: var(--accent);
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 0.75rem;
   font-weight: 500;
   border: 1px solid rgba(212, 168, 75, 0.15);
+  white-space: nowrap;
 }
 
 .whiskey-card .tag.age {
@@ -299,19 +338,21 @@ header .stat-label {
 
 .whiskey-card .card-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding-top: 16px;
+  gap: 12px;
+  padding-top: 12px;
   border-top: 1px solid var(--border);
+  flex-wrap: wrap;
 }
 
 .whiskey-card .rating {
   display: flex;
-  gap: 3px;
+  gap: 2px;
 }
 
 .whiskey-card .rating .star {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: var(--accent);
 }
 
@@ -320,9 +361,10 @@ header .stat-label {
 }
 
 .whiskey-card .price {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--success);
+  white-space: nowrap;
 }
 
 /* Empty State */

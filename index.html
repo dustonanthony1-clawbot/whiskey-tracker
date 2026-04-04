@@ -18,59 +18,88 @@
       <div class="hero">
         <div class="logo-graphics">
           <!-- Blanton's-style bourbon bottle SVG -->
-          <svg class="bottle-svg" viewBox="0 0 48 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="bottle-svg" viewBox="0 0 52 110" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="bottleGold" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" style="stop-color:#d4a84b"/>
-                <stop offset="50%" style="stop-color:#e8c06a"/>
-                <stop offset="100%" style="stop-color:#c9a035"/>
+                <stop offset="40%" style="stop-color:#f0d78c"/>
+                <stop offset="60%" style="stop-color:#d4a84b"/>
+                <stop offset="100%" style="stop-color:#b8922e"/>
               </linearGradient>
               <linearGradient id="bottleDark" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:#1a1510"/>
-                <stop offset="50%" style="stop-color:#2a2015"/>
-                <stop offset="100%" style="stop-color:#1a1510"/>
+                <stop offset="0%" style="stop-color:#0f0d0a"/>
+                <stop offset="50%" style="stop-color:#1a1612"/>
+                <stop offset="100%" style="stop-color:#0f0d0a"/>
+              </linearGradient>
+              <linearGradient id="labelBg" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#f5f5f5"/>
+                <stop offset="100%" style="stop-color:#e8e8e8"/>
+              </linearGradient>
+              <linearGradient id="foilWrap" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:#c9a035"/>
+                <stop offset="50%" style="stop-color:#f0d78c"/>
+                <stop offset="100%" style="stop-color:#c9a035"/>
               </linearGradient>
             </defs>
-            <!-- Bottle body -->
-            <rect x="8" y="28" width="32" height="68" rx="4" fill="url(#bottleDark)" stroke="url(#bottleGold)" stroke-width="1.5"/>
+            <!-- Foil cap at top -->
+            <ellipse cx="26" cy="8" rx="12" ry="4" fill="url(#foilWrap)"/>
+            <rect x="14" y="4" width="24" height="6" fill="url(#foilWrap)"/>
             <!-- Bottle neck -->
-            <rect x="16" y="12" width="16" height="18" rx="2" fill="url(#bottleDark)" stroke="url(#bottleGold)" stroke-width="1.5"/>
-            <!-- Bottle shoulder -->
-            <path d="M8 28 Q8 20 16 18 L32 18 Q40 20 40 28" fill="url(#bottleDark)" stroke="url(#bottleGold)" stroke-width="1.5"/>
-            <!-- Cork -->
-            <rect x="17" y="6" width="14" height="8" rx="2" fill="#c9a55c"/>
-            <!-- Label -->
-            <rect x="12" y="40" width="24" height="32" rx="2" fill="#1a1510" stroke="url(#bottleGold)" stroke-width="0.5"/>
-            <rect x="15" y="44" width="18" height="3" rx="1" fill="url(#bottleGold)"/>
-            <rect x="15" y="50" width="18" height="1" fill="#c9a55c" opacity="0.5"/>
-            <rect x="15" y="54" width="18" height="1" fill="#c9a55c" opacity="0.5"/>
-            <rect x="15" y="58" width="12" height="1" fill="#c9a55c" opacity="0.5"/>
-            <!-- Horse emblem on label -->
-            <ellipse cx="24" cy="68" rx="5" ry="3" fill="none" stroke="#c9a55c" stroke-width="0.5"/>
+            <path d="M18 10 L18 26 L14 30 L14 32 L38 32 L38 30 L34 26 L34 10 Z" fill="url(#bottleDark)" stroke="url(#bottleGold)" stroke-width="1"/>
+            <!-- Foil neck wrap -->
+            <rect x="15" y="14" width="22" height="8" fill="url(#foilWrap)" opacity="0.7"/>
+            <!-- Bottle shoulder/sides -->
+            <path d="M14 32 L14 100 Q14 104 18 104 L34 104 Q38 104 38 100 L38 32" fill="url(#bottleDark)" stroke="url(#bottleGold)" stroke-width="1"/>
+            <!-- Gold foil on sides -->
+            <rect x="14" y="32" width="3" height="68" fill="url(#foilWrap)" opacity="0.6"/>
+            <rect x="35" y="32" width="3" height="68" fill="url(#foilWrap)" opacity="0.6"/>
+            <!-- White/cream label -->
+            <rect x="17" y="38" width="18" height="42" rx="1" fill="url(#labelBg)"/>
+            <!-- Gold border on label -->
+            <rect x="17" y="38" width="18" height="42" rx="1" fill="none" stroke="url(#bottleGold)" stroke-width="0.75"/>
+            <!-- ALC label text -->
+            <text x="26" y="47" font-family="Georgia, serif" font-size="4" fill="#1a1a1a" text-anchor="middle" font-weight="bold">ALC.</text>
+            <text x="26" y="52" font-family="Georgia, serif" font-size="4" fill="#1a1a1a" text-anchor="middle">46.5%</text>
+            <!-- Blanton's text -->
+            <text x="26" y="60" font-family="Georgia, serif" font-size="5" fill="#1a1a1a" text-anchor="middle" font-weight="bold">BLANTON'S</text>
+            <!-- Single Barrel text -->
+            <text x="26" y="67" font-family="Georgia, serif" font-size="3.5" fill="#1a1a1a" text-anchor="middle">SINGLE BARREL</text>
+            <!-- Triangle symbol -->
+            <polygon points="26,70 23,74 29,74" fill="none" stroke="#1a1a1a" stroke-width="0.5"/>
+            <!-- Horse emblem (simplified knight) -->
+            <ellipse cx="26" cy="78" rx="4" ry="2.5" fill="none" stroke="url(#bottleGold)" stroke-width="0.5"/>
+            <!-- Bottled by text -->
+            <text x="26" y="83" font-family="Georgia, serif" font-size="2.5" fill="#666" text-anchor="middle">Bottled by</text>
+            <!-- Bourbon text -->
+            <text x="26" y="87" font-family="Georgia, serif" font-size="2.5" fill="#666" text-anchor="middle">KENTUCKY BOURBON</text>
           </svg>
           <!-- Glencairn glass SVG (half full) -->
-          <svg class="glass-svg" viewBox="0 0 40 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="glass-svg" viewBox="0 0 44 60" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <linearGradient id="whiskeyFill" x1="0%" y1="0%" x2="0%" y2="100%">
                 <stop offset="0%" style="stop-color:#d4a84b;stop-opacity:0.9"/>
                 <stop offset="100%" style="stop-color:#8b6914;stop-opacity:0.95"/>
               </linearGradient>
               <linearGradient id="glassBody" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:rgba(255,255,255,0.08)"/>
-                <stop offset="50%" style="stop-color:rgba(255,255,255,0.03)"/>
-                <stop offset="100%" style="stop-color:rgba(255,255,255,0.08)"/>
+                <stop offset="0%" style="stop-color:rgba(255,255,255,0.12)"/>
+                <stop offset="50%" style="stop-color:rgba(255,255,255,0.05)"/>
+                <stop offset="100%" style="stop-color:rgba(255,255,255,0.12)"/>
               </linearGradient>
             </defs>
-            <!-- Glass bowl -->
-            <path d="M6 12 Q6 8 10 6 L30 6 Q34 8 34 12 L32 36 Q32 42 26 44 L14 44 Q8 42 8 36 Z" fill="url(#glassBody)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
-            <!-- Whiskey (half full) -->
-            <path d="M9 28 Q9 26 11 25 L29 25 Q31 26 31 28 L29 36 Q29 40 25 41 L15 41 Q11 40 11 36 Z" fill="url(#whiskeyFill)" opacity="0.85"/>
-            <!-- Glass base -->
-            <rect x="12" y="44" width="16" height="4" rx="1" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+            <!-- Glass bowl - wider at top, narrower at bottom (Glencairn shape) -->
+            <path d="M4 10 Q4 4 10 2 L34 2 Q40 4 40 10 L36 38 Q36 46 28 48 L16 48 Q8 46 8 38 Z" fill="url(#glassBody)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+            <!-- Whiskey (half full - amber liquid) -->
+            <path d="M7 32 Q7 30 9 29 L35 29 Q37 30 37 32 L34 38 Q34 43 28 44 L16 44 Q10 43 10 38 Z" fill="url(#whiskeyFill)" opacity="0.88"/>
+            <!-- Liquid surface shine -->
+            <ellipse cx="22" cy="30" rx="12" ry="2" fill="rgba(255,255,255,0.1)"/>
+            <!-- Glass base plate -->
+            <ellipse cx="22" cy="50" rx="12" ry="3" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
             <!-- Stem -->
-            <rect x="18" y="48" width="4" height="6" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
-            <!-- Shine -->
-            <path d="M10 14 Q11 20 10 26" stroke="rgba(255,255,255,0.15)" stroke-width="1" fill="none"/>
+            <rect x="19" y="48" width="6" height="6" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+            <!-- Shine reflection on glass -->
+            <path d="M8 12 Q9 20 8 28" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <!-- Small highlight -->
+            <circle cx="12" cy="14" r="1.5" fill="rgba(255,255,255,0.15)"/>
           </svg>
         </div>
         <div class="hero-text">

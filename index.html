@@ -3,42 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#1a1a2e">
+  <meta name="theme-color" content="#0a0a0f">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Whiskey Tracker</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%231a1a2e' width='100' height='100' rx='20'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='%23d4a574'>W</text></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230a0a0f' width='100' height='100' rx='20'/><text x='50' y='68' font-size='50' text-anchor='middle' fill='%23c9a55c'>W</text></svg>">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div id="app">
     <header>
-      <h1>🥃 Whiskey Tracker</h1>
-      <div class="header-actions">
-        <button id="statsBtn" class="icon-btn" title="Stats">📊</button>
-        <button id="addBtn" class="icon-btn" title="Add Whiskey">➕</button>
+      <div class="header-top">
+        <h1>🥃 Whiskey Tracker</h1>
+        <div class="header-actions">
+          <button id="statsBtn" class="icon-btn" title="Stats">📊</button>
+          <button id="addBtn" class="icon-btn" title="Add Whiskey">➕</button>
+        </div>
+      </div>
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search your collection...">
+        <select id="filterType">
+          <option value="">All Types</option>
+          <option value="Bourbon">Bourbon</option>
+          <option value="Scotch">Scotch</option>
+          <option value="Rye">Rye</option>
+          <option value="Irish">Irish</option>
+          <option value="Japanese">Japanese</option>
+          <option value="Canadian">Canadian</option>
+          <option value="Other">Other</option>
+        </select>
       </div>
     </header>
 
-    <div class="search-bar">
-      <input type="text" id="searchInput" placeholder="Search your collection...">
-      <select id="filterType">
-        <option value="">All Types</option>
-        <option value="Bourbon">Bourbon</option>
-        <option value="Scotch">Scotch</option>
-        <option value="Rye">Rye</option>
-        <option value="Irish">Irish</option>
-        <option value="Japanese">Japanese</option>
-        <option value="Canadian">Canadian</option>
-        <option value="Other">Other</option>
-      </select>
-    </div>
-
     <div id="collection" class="collection"></div>
     <div id="emptyState" class="empty-state">
-      <p>No whiskeys yet!</p>
-      <p>Tap ➕ to add your first bottle</p>
+      <div class="icon">🥃</div>
+      <h2>Your collection is empty</h2>
+      <p>Tap the button above to add your first bottle</p>
     </div>
   </div>
 
@@ -52,7 +54,7 @@
       <form id="whiskeyForm">
         <div class="form-group">
           <label for="name">Name *</label>
-          <input type="text" id="name" required placeholder="e.g., Blanton's Original">
+          <input type="text" id="name" required placeholder="e.g., Blanton's Original Single Barrel">
         </div>
         <div class="form-group">
           <label for="distillery">Distillery</label>
@@ -99,11 +101,11 @@
         <div class="form-group">
           <label for="photo">Photo</label>
           <input type="file" id="photo" accept="image/*" capture="environment">
-          <img id="photoPreview" class="photo-preview hidden">
+          <img id="photoPreview" class="photo-preview" alt="Preview">
         </div>
         <div class="form-group">
           <label for="notes">Tasting Notes</label>
-          <textarea id="notes" rows="3" placeholder="Vanilla, oak, hints of cherry..."></textarea>
+          <textarea id="notes" rows="3" placeholder="Describe the flavors you experience..."></textarea>
         </div>
         <div class="form-group">
           <label>Rating</label>
@@ -117,8 +119,8 @@
           <input type="hidden" id="rating" value="0">
         </div>
         <div class="form-group">
-          <label for="flavorTags">Flavor Tags (comma separated)</label>
-          <input type="text" id="flavorTags" placeholder="e.g., sweet, smoky, fruity, spicy">
+          <label for="flavorTags">Flavor Tags</label>
+          <input type="text" id="flavorTags" placeholder="e.g., vanilla, oak, cherry (comma separated)">
         </div>
         <button type="submit" id="submitBtn" class="submit-btn">Add Whiskey</button>
       </form>

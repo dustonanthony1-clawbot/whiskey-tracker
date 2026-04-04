@@ -67,7 +67,6 @@ function setupEventListeners() {
         currentPhotoBase64 = e.target.result;
         const preview = document.getElementById('photoPreview');
         preview.src = currentPhotoBase64;
-        preview.classList.remove('hidden');
       };
       reader.readAsDataURL(file);
     }
@@ -86,7 +85,7 @@ function openModal(whiskey = null) {
   document.getElementById('rating').value = '0';
   document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
   currentPhotoBase64 = null;
-  document.getElementById('photoPreview').classList.add('hidden');
+  document.getElementById('photoPreview').src = '';
 
   // Populate if editing
   if (whiskey) {
@@ -111,7 +110,6 @@ function openModal(whiskey = null) {
       currentPhotoBase64 = whiskey.photo;
       const preview = document.getElementById('photoPreview');
       preview.src = currentPhotoBase64;
-      preview.classList.remove('hidden');
     }
   }
 
@@ -196,7 +194,10 @@ function renderCollection() {
         <div class="rating">
           ${renderStars(whiskey.rating)}
         </div>
-        ${whiskey.price ? `<div class="price">$${whiskey.price.toFixed(2)}</div>` : ''}
+        <div class="footer">
+          ${whiskey.price ? `<span class="price">$${whiskey.price.toFixed(2)}</span>` : '<span></span>'}
+          ${whiskey.datePurchased ? `<span class="added-date">${formatDate(whiskey.datePurchased)}</span>` : ''}
+        </div>
       </div>
     </div>
   `).join('');
@@ -209,63 +210,65 @@ function showDetail(id) {
   document.getElementById('detailTitle').textContent = whiskey.name;
   document.getElementById('detailContent').innerHTML = `
     ${whiskey.photo ? `<img src="${whiskey.photo}" alt="${whiskey.name}" class="detail-image">` : ''}
-    <div class="detail-row">
-      <span class="detail-label">Type</span>
-      <span class="detail-value">${whiskey.type}</span>
+    <div class="detail-info">
+      <div class="detail-row">
+        <span class="detail-label">Type</span>
+        <span class="detail-value">${whiskey.type}</span>
+      </div>
+      ${whiskey.distillery ? `
+        <div class="detail-row">
+          <span class="detail-label">Distillery</span>
+          <span class="detail-value">${escapeHtml(whiskey.distillery)}</span>
+        </div>
+      ` : ''}
+      ${whiskey.age ? `
+        <div class="detail-row">
+          <span class="detail-label">Age</span>
+          <span class="detail-value">${whiskey.age} years</span>
+        </div>
+      ` : ''}
+      ${whiskey.abv ? `
+        <div class="detail-row">
+          <span class="detail-label">ABV</span>
+          <span class="detail-value">${whiskey.abv}%</span>
+        </div>
+      ` : ''}
+      ${whiskey.proof ? `
+        <div class="detail-row">
+          <span class="detail-label">Proof</span>
+          <span class="detail-value">${whiskey.proof}</span>
+        </div>
+      ` : ''}
+      ${whiskey.price ? `
+        <div class="detail-row">
+          <span class="detail-label">Price</span>
+          <span class="detail-value">$${whiskey.price.toFixed(2)}</span>
+        </div>
+      ` : ''}
+      ${whiskey.datePurchased ? `
+        <div class="detail-row">
+          <span class="detail-label">Purchased</span>
+          <span class="detail-value">${new Date(whiskey.datePurchased).toLocaleDateString()}</span>
+        </div>
+      ` : ''}
+      ${whiskey.rating ? `
+        <div class="detail-row">
+          <span class="detail-label">Rating</span>
+          <span class="detail-value">${renderStars(whiskey.rating)}</span>
+        </div>
+      ` : ''}
+      ${whiskey.notes ? `
+        <div class="detail-notes">
+          <h4>Tasting Notes</h4>
+          <p>${escapeHtml(whiskey.notes)}</p>
+        </div>
+      ` : ''}
+      ${whiskey.flavorTags && whiskey.flavorTags.length > 0 ? `
+        <div class="detail-tags">
+          ${whiskey.flavorTags.map(t => `<span class="detail-tag">${escapeHtml(t)}</span>`).join('')}
+        </div>
+      ` : ''}
     </div>
-    ${whiskey.distillery ? `
-      <div class="detail-row">
-        <span class="detail-label">Distillery</span>
-        <span class="detail-value">${escapeHtml(whiskey.distillery)}</span>
-      </div>
-    ` : ''}
-    ${whiskey.age ? `
-      <div class="detail-row">
-        <span class="detail-label">Age</span>
-        <span class="detail-value">${whiskey.age} years</span>
-      </div>
-    ` : ''}
-    ${whiskey.abv ? `
-      <div class="detail-row">
-        <span class="detail-label">ABV</span>
-        <span class="detail-value">${whiskey.abv}%</span>
-      </div>
-    ` : ''}
-    ${whiskey.proof ? `
-      <div class="detail-row">
-        <span class="detail-label">Proof</span>
-        <span class="detail-value">${whiskey.proof}</span>
-      </div>
-    ` : ''}
-    ${whiskey.price ? `
-      <div class="detail-row">
-        <span class="detail-label">Price</span>
-        <span class="detail-value">$${whiskey.price.toFixed(2)}</span>
-      </div>
-    ` : ''}
-    ${whiskey.datePurchased ? `
-      <div class="detail-row">
-        <span class="detail-label">Purchased</span>
-        <span class="detail-value">${new Date(whiskey.datePurchased).toLocaleDateString()}</span>
-      </div>
-    ` : ''}
-    ${whiskey.rating ? `
-      <div class="detail-row">
-        <span class="detail-label">Rating</span>
-        <span class="detail-value">${renderStars(whiskey.rating)}</span>
-      </div>
-    ` : ''}
-    ${whiskey.notes ? `
-      <div class="detail-notes">
-        <h4>Tasting Notes</h4>
-        <p>${escapeHtml(whiskey.notes)}</p>
-      </div>
-    ` : ''}
-    ${whiskey.flavorTags && whiskey.flavorTags.length > 0 ? `
-      <div class="detail-tags">
-        ${whiskey.flavorTags.map(t => `<span class="detail-tag">${escapeHtml(t)}</span>`).join('')}
-      </div>
-    ` : ''}
     <div class="detail-actions">
       <button class="edit-btn" onclick="event.stopPropagation(); openModal(collection.find(w => w.id === '${whiskey.id}'))">Edit</button>
       <button class="delete-btn" onclick="event.stopPropagation(); deleteWhiskey('${whiskey.id}')">Delete</button>
@@ -333,8 +336,13 @@ function showStats() {
 }
 
 function renderStars(rating) {
-  if (!rating) return '<span class="empty">☆☆☆☆☆</span>';
-  return '★'.repeat(rating) + '<span class="empty">☆'.repeat(5 - rating) + '</span>';
+  if (!rating) return '<span class="star">☆</span><span class="star">☆</span><span class="star">☆</span><span class="star">☆</span><span class="star">☆</span>';
+  return '★'.repeat(rating).split('').map(() => '<span class="star">★</span>').join('') + '☆'.repeat(5 - rating).split('').map(() => '<span class="star empty">☆</span>').join('');
+}
+
+function formatDate(dateStr) {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 }
 
 function escapeHtml(text) {

@@ -188,7 +188,7 @@ function renderCollection() {
           : `<div class="image-placeholder">🥃</div>`
         }
       </div>
-      <div class="card-body">
+      <div class="card-content">
         <div class="name">${escapeHtml(whiskey.name)}</div>
         ${whiskey.distillery ? `<div class="distillery">${escapeHtml(whiskey.distillery)}</div>` : ''}
         <div class="meta">
@@ -199,7 +199,7 @@ function renderCollection() {
         <div class="rating">
           ${renderStars(whiskey.rating)}
         </div>
-        <div class="footer">
+        <div class="card-footer">
           ${whiskey.price ? `<span class="price">$${whiskey.price.toFixed(2)}</span>` : '<span></span>'}
           ${whiskey.datePurchased ? `<span class="added-date">${formatDate(whiskey.datePurchased)}</span>` : ''}
         </div>

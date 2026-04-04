@@ -336,15 +336,19 @@ header .stat-label {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   padding-top: 14px;
   padding-bottom: 6px;
   border-top: 1px solid var(--border);
+  width: 100%;
 }
 
 .whiskey-card .rating {
   display: flex;
   gap: 4px;
+  justify-content: center;
+  width: 100%;
 }
 
 .whiskey-card .rating .star {

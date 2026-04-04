@@ -592,6 +592,7 @@ input::placeholder, textarea::placeholder {
   color: var(--text-secondary);
   display: flex;
   gap: 8px;
+  flex-wrap: wrap;
 }
 
 .suggestion-item .suggestion-tag {
@@ -600,6 +601,27 @@ input::placeholder, textarea::placeholder {
   padding: 2px 8px;
   border-radius: 10px;
   font-size: 0.75rem;
+}
+
+.suggestion-item .suggestion-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.suggestion-item .api-badge {
+  background: linear-gradient(135deg, #4a90a4, #357a8a);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.suggestion-item .suggestion-country {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 4px;
 }
 
 .search-hint {

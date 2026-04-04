@@ -12,6 +12,13 @@ const detailModal = document.getElementById('detailModal');
 const whiskeyForm = document.getElementById('whiskeyForm');
 const searchInput = document.getElementById('searchInput');
 const filterType = document.getElementById('filterType');
+const suggestionsEl = document.getElementById('searchSuggestions');
+const nameInput = document.getElementById('name');
+const distilleryInput = document.getElementById('distillery');
+const typeInput = document.getElementById('type');
+const ageInput = document.getElementById('age');
+const abvInput = document.getElementById('abv');
+const proofInput = document.getElementById('proof');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -47,6 +54,44 @@ function setupEventListeners() {
   searchInput.addEventListener('input', renderCollection);
   filterType.addEventListener('change', renderCollection);
 
+  // Smart search for whiskey name
+  nameInput.addEventListener('input', (e) => {
+    const query = e.target.value;
+    if (query.length < 2) {
+      suggestionsEl.classList.add('hidden');
+      return;
+    }
+    
+    const results = searchWhiskeys(query);
+    if (results.length === 0) {
+      suggestionsEl.classList.add('hidden');
+      return;
+    }
+    
+    suggestionsEl.innerHTML = `
+      <div class="search-hint">Select a whiskey to auto-fill details, or type a custom name</div>
+      ${results.map(w => `
+        <div class="suggestion-item" onclick="selectWhiskey('${w.name.replace(/'/g, "\\'")}')">
+          <div class="suggestion-name">${escapeHtml(w.name)}</div>
+          <div class="suggestion-meta">
+            <span class="suggestion-tag">${w.type}</span>
+            ${w.age ? `<span>${w.age} yr</span>` : ''}
+            ${w.abv ? `<span>${w.abv}%</span>` : ''}
+            <span>${escapeHtml(w.distillery)}</span>
+          </div>
+        </div>
+      `).join('')}
+    `;
+    suggestionsEl.classList.remove('hidden');
+  });
+  
+  // Hide suggestions when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.form-group')) {
+      suggestionsEl.classList.add('hidden');
+    }
+  });
+  
   // Star rating
   document.querySelectorAll('.star').forEach(star => {
     star.addEventListener('click', () => {
@@ -354,6 +399,26 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+// Auto-fill form when a whiskey is selected from suggestions
+function selectWhiskey(name) {
+  const whiskey = WHISKEY_DATABASE.find(w => w.name === name);
+  if (!whiskey) return;
+  
+  nameInput.value = whiskey.name;
+  distilleryInput.value = whiskey.distillery;
+  typeInput.value = whiskey.type;
+  ageInput.value = whiskey.age || '';
+  abvInput.value = whiskey.abv || '';
+  if (whiskey.abv) {
+    proofInput.value = Math.round(whiskey.abv * 2);
+  }
+  
+  suggestionsEl.classList.add('hidden');
+  
+  // Focus on price field next
+  document.getElementById('price').focus();
 }
 
 // Service Worker Registration

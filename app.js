@@ -246,7 +246,6 @@ function renderCollection() {
             ${renderStars(whiskey.rating)}
           </div>
           ${whiskey.price ? `<span class="price">$${whiskey.price.toFixed(2)}</span>` : ''}
-          ${whiskey.datePurchased ? `<span class="added-date">${formatDate(whiskey.datePurchased)}</span>` : ''}
         </div>
       </div>
     </div>

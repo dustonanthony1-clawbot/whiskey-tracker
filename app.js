@@ -241,11 +241,11 @@ function renderCollection() {
           ${whiskey.age ? `<span class="tag">${whiskey.age}yr</span>` : ''}
           ${whiskey.abv ? `<span class="tag">${whiskey.abv}%</span>` : ''}
         </div>
-        <div class="rating">
-          ${renderStars(whiskey.rating)}
-        </div>
         <div class="card-footer">
-          ${whiskey.price ? `<span class="price">$${whiskey.price.toFixed(2)}</span>` : '<span></span>'}
+          <div class="rating">
+            ${renderStars(whiskey.rating)}
+          </div>
+          ${whiskey.price ? `<span class="price">$${whiskey.price.toFixed(2)}</span>` : ''}
           ${whiskey.datePurchased ? `<span class="added-date">${formatDate(whiskey.datePurchased)}</span>` : ''}
         </div>
       </div>

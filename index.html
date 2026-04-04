@@ -40,6 +40,10 @@
                 <stop offset="50%" style="stop-color:#f0d78c"/>
                 <stop offset="100%" style="stop-color:#c9a035"/>
               </linearGradient>
+              <!-- Blur filter for text -->
+              <filter id="textBlur" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="0.4"/>
+              </filter>
             </defs>
             <!-- Foil cap at top -->
             <ellipse cx="26" cy="8" rx="12" ry="4" fill="url(#foilWrap)"/>
@@ -57,21 +61,19 @@
             <rect x="17" y="38" width="18" height="42" rx="1" fill="url(#labelBg)"/>
             <!-- Gold border on label -->
             <rect x="17" y="38" width="18" height="42" rx="1" fill="none" stroke="url(#bottleGold)" stroke-width="0.75"/>
-            <!-- ALC label text -->
-            <text x="26" y="47" font-family="Georgia, serif" font-size="4" fill="#1a1a1a" text-anchor="middle" font-weight="bold">ALC.</text>
-            <text x="26" y="52" font-family="Georgia, serif" font-size="4" fill="#1a1a1a" text-anchor="middle">46.5%</text>
-            <!-- Blanton's text -->
-            <text x="26" y="60" font-family="Georgia, serif" font-size="5" fill="#1a1a1a" text-anchor="middle" font-weight="bold">BLANTON'S</text>
-            <!-- Single Barrel text -->
-            <text x="26" y="67" font-family="Georgia, serif" font-size="3.5" fill="#1a1a1a" text-anchor="middle">SINGLE BARREL</text>
-            <!-- Triangle symbol -->
+            <!-- All text with blur filter -->
+            <g filter="url(#textBlur)">
+              <text x="26" y="47" font-family="Georgia, serif" font-size="4" fill="#1a1a1a" text-anchor="middle" font-weight="bold">ALC.</text>
+              <text x="26" y="52" font-family="Georgia, serif" font-size="4" fill="#1a1a1a" text-anchor="middle">46.5%</text>
+              <text x="26" y="60" font-family="Georgia, serif" font-size="5" fill="#1a1a1a" text-anchor="middle" font-weight="bold">BLANTON'S</text>
+              <text x="26" y="67" font-family="Georgia, serif" font-size="3.5" fill="#1a1a1a" text-anchor="middle">SINGLE BARREL</text>
+              <text x="26" y="83" font-family="Georgia, serif" font-size="2.5" fill="#666" text-anchor="middle">Bottled by</text>
+              <text x="26" y="87" font-family="Georgia, serif" font-size="2.5" fill="#666" text-anchor="middle">KENTUCKY BOURBON</text>
+            </g>
+            <!-- Triangle symbol (kept sharp) -->
             <polygon points="26,70 23,74 29,74" fill="none" stroke="#1a1a1a" stroke-width="0.5"/>
             <!-- Horse emblem (simplified knight) -->
             <ellipse cx="26" cy="78" rx="4" ry="2.5" fill="none" stroke="url(#bottleGold)" stroke-width="0.5"/>
-            <!-- Bottled by text -->
-            <text x="26" y="83" font-family="Georgia, serif" font-size="2.5" fill="#666" text-anchor="middle">Bottled by</text>
-            <!-- Bourbon text -->
-            <text x="26" y="87" font-family="Georgia, serif" font-size="2.5" fill="#666" text-anchor="middle">KENTUCKY BOURBON</text>
           </svg>
           <!-- Glencairn glass SVG (half full) -->
           <svg class="glass-svg" viewBox="0 0 44 60" fill="none" xmlns="http://www.w3.org/2000/svg">

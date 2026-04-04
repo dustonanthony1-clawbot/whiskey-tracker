@@ -167,6 +167,11 @@ function renderCollection() {
     return matchesSearch && matchesType;
   });
 
+  // Update header stats
+  const totalValue = collection.reduce((sum, w) => sum + (w.price || 0), 0);
+  document.getElementById('totalCount').textContent = collection.length;
+  document.getElementById('totalValue').textContent = '$' + totalValue.toFixed(0);
+
   if (collection.length === 0) {
     emptyStateEl.style.display = 'block';
     collectionEl.innerHTML = '';

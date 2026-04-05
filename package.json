@@ -1,0 +1,16 @@
+{
+  "name": "barrel-proof",
+  "version": "1.0.0",
+  "description": "Barrel Proof - Whiskey Collection Tracker",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "android:copy": "npx cap copy android",
+    "android:build": "npm run build && npx cap copy android && npx cap sync android",
+    "android:open": "npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0"
+  }
+}

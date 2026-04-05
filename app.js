@@ -246,8 +246,8 @@ async function handleDbSubmit(e) {
   const existingInLocal = WHISKEY_DATABASE.find(w => w.name.toLowerCase() === lowerName);
   
   if (existingInLocal) {
-    const confirmAdd = confirm(`"${name}" is already in our database!\n\nDetails:\n- Distillery: ${existingInLocal.distillery}\n- Type: ${existingInLocal.type}\n${existingInLocal.age ? '- Age: ' + existingInLocal.age + ' years\n' : ''}${existingInLocal.abv ? '- ABV: ' + existingInLocal.abv + '%\n' : ''}\n\nStill want to add it as a duplicate?`);
-    if (!confirmAdd) return;
+    alert(`"${name}" is already in our database!\n\nThis whiskey cannot be added as a duplicate.`);
+    return;
   }
   
   const submitBtn = document.getElementById('submitDbBtn');

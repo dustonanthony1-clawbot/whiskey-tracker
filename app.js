@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadCollection();
   renderCollection();
   setupEventListeners();
-  registerServiceWorker();
+  console.log('App initialized');
   
   // Also load shared whiskeys into local DB for search
   loadSharedWhiskeys().then(sharedWhiskeys => {
@@ -561,11 +561,11 @@ function selectWhiskey(name) {
   document.getElementById('price').focus();
 }
 
-// Service Worker Registration
-function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('SW registered'))
-      .catch(err => console.log('SW registration failed:', err));
-  }
-}
+// Service Worker Registration - DISABLED FOR DEBUGGING
+// function registerServiceWorker() {
+//   if ('serviceWorker' in navigator) {
+//     navigator.serviceWorker.register('sw.js')
+//       .then(reg => console.log('SW registered'))
+//       .catch(err => console.log('SW registration failed:', err));
+//   }
+// }

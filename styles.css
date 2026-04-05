@@ -200,19 +200,29 @@ header .stat-label {
 .filter-tabs {
   display: flex;
   gap: 4px;
+/* Filter bar - mobile first tabs */
+.filter-bar {
+  display: flex;
+  gap: 12px;
+  padding: 0 20px;
+  margin-bottom: 20px;
 }
 
 .filter-tab {
-  padding: 10px 14px;
-  background: var(--bg-elevated);
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
+  flex: 1;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
   color: var(--text-secondary);
-  font-size: 0.85rem;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
+  transition: all 0.25s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .filter-tab:hover {
@@ -225,9 +235,36 @@ header .stat-label {
   border-color: var(--accent);
 }
 
+/* Search section - shown only in Collection view */
+.search-section {
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+.search-section input {
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: all 0.25s;
+}
+
+.search-section input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-dim);
+}
+
+.search-section input::placeholder {
+  color: var(--text-muted);
+}
+
 /* Collection Grid */
 .collection {
-  padding: 0 28px;
+  padding: 0 20px;
   max-width: 1400px;
   margin: 0 auto;
   display: grid;
@@ -1123,10 +1160,24 @@ textarea {
     font-size: 0.9rem;
   }
   
+  .filter-bar {
+    padding: 0 16px;
+    gap: 10px;
+  }
+  
+  .filter-tab {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+  
+  .search-section {
+    padding: 0 16px;
+    margin-bottom: 16px;
+  }
+  
   .collection {
-    grid-template-columns: 1fr;
-    padding: 0 20px;
-    gap: 20px;
+    padding: 0 16px;
+    gap: 16px;
   }
   
   .form-row {

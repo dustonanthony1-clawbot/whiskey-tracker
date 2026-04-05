@@ -70,12 +70,12 @@
             </button>
           </div>
         </div>
-        <div class="search-bar">
+        <div class="filter-bar">
+          <button id="filterOwned" class="filter-tab active" onclick="setFilter('owned')">📦 Collection</button>
+          <button id="filterWishlist" class="filter-tab" onclick="setFilter('wishlist')">❤️ Wishlist</button>
+        </div>
+        <div id="searchSection" class="search-section hidden">
           <input type="text" id="searchInput" placeholder="Search your collection...">
-          <div class="filter-tabs">
-            <button id="filterOwned" class="filter-tab active" onclick="setFilter('owned')">📦 Collection</button>
-            <button id="filterWishlist" class="filter-tab" onclick="setFilter('wishlist')">❤️ Wishlist</button>
-          </div>
         </div>
       </div>
     </header>

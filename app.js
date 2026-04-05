@@ -143,6 +143,17 @@ function setFilter(filter) {
   currentFilter = filter;
   filterOwned.classList.toggle('active', filter === 'owned');
   filterWishlist.classList.toggle('active', filter === 'wishlist');
+  
+  // Show/hide search bar based on filter
+  const searchSection = document.getElementById('searchSection');
+  if (filter === 'owned') {
+    searchSection.classList.remove('hidden');
+  } else {
+    searchSection.classList.add('hidden');
+  }
+  
+  // Clear search when switching
+  searchInput.value = '';
   renderCollection();
 }
 

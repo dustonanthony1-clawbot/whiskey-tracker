@@ -199,7 +199,6 @@ header .stat-label {
 
 .filter-tabs {
   display: flex;
-  gap: 4px;
 /* Filter bar - mobile first tabs */
 .filter-bar {
   display: flex;

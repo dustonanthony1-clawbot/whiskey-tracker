@@ -193,12 +193,10 @@ header .stat-label {
   outline: none;
 }
 
-.search-bar input::placeholder {
+.search-section input::placeholder {
   color: var(--text-muted);
 }
 
-.filter-tabs {
-  display: flex;
 /* Filter bar - mobile first tabs */
 .filter-bar {
   display: flex;

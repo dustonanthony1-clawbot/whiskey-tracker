@@ -19,7 +19,34 @@
     <header>
       <div class="hero">
         <div class="logo-graphics">
-          <img src="app-icon.png" alt="Barrel Proof" class="app-logo-img">
+          <!-- Glencairn glass SVG (half full) - larger -->
+          <svg class="glass-svg" viewBox="0 0 56 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="whiskeyFill" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" style="stop-color:#d4a84b;stop-opacity:0.9"/>
+                <stop offset="100%" style="stop-color:#8b6914;stop-opacity:0.95"/>
+              </linearGradient>
+              <linearGradient id="glassBody" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:rgba(255,255,255,0.12)"/>
+                <stop offset="50%" style="stop-color:rgba(255,255,255,0.05)"/>
+                <stop offset="100%" style="stop-color:rgba(255,255,255,0.12)"/>
+              </linearGradient>
+            </defs>
+            <!-- Glass bowl - wider at top, narrower at bottom (Glencairn shape) -->
+            <path d="M6 14 Q6 6 14 4 L42 4 Q50 6 50 14 L44 46 Q44 56 34 58 L22 58 Q12 56 12 46 Z" fill="url(#glassBody)" stroke="rgba(255,255,255,0.25)" stroke-width="1.5"/>
+            <!-- Whiskey (half full - amber liquid) -->
+            <path d="M10 40 Q10 38 12 36 L44 36 Q46 38 46 40 L42 46 Q42 52 34 54 L22 54 Q14 52 14 46 Z" fill="url(#whiskeyFill)" opacity="0.88"/>
+            <!-- Liquid surface shine -->
+            <ellipse cx="28" cy="37" rx="14" ry="2.5" fill="rgba(255,255,255,0.1)"/>
+            <!-- Glass base plate -->
+            <ellipse cx="28" cy="62" rx="14" ry="4" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+            <!-- Stem -->
+            <rect x="24" y="58" width="8" height="8" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"/>
+            <!-- Shine reflection on glass -->
+            <path d="M10 16 Q12 26 10 36" stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <!-- Small highlight -->
+            <circle cx="15" cy="18" r="2" fill="rgba(255,255,255,0.15)"/>
+          </svg>
         </div>
           <svg class="glass-svg" viewBox="0 0 56 76" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>

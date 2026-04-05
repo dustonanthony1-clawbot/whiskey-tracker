@@ -580,15 +580,17 @@ function deleteWhiskey(id) {
 }
 
 function showStats() {
-  const totalBottles = collection.length;
-  const totalValue = collection.reduce((sum, w) => sum + (w.price || 0), 0);
-  const avgRating = collection.filter(w => w.rating).length > 0
-    ? (collection.reduce((sum, w) => sum + (w.rating || 0), 0) / collection.filter(w => w.rating).length).toFixed(1)
+  // Only count owned bottles (not wishlist)
+  const ownedBottles = collection.filter(w => w.status === 'owned');
+  const totalBottles = ownedBottles.length;
+  const totalValue = ownedBottles.reduce((sum, w) => sum + (w.price || 0), 0);
+  const avgRating = ownedBottles.filter(w => w.rating).length > 0
+    ? (ownedBottles.reduce((sum, w) => sum + (w.rating || 0), 0) / ownedBottles.filter(w => w.rating).length).toFixed(1)
     : 'N/A';
 
   // Type breakdown
   const typeCount = {};
-  collection.forEach(w => {
+  ownedBottles.forEach(w => {
     typeCount[w.type] = (typeCount[w.type] || 0) + 1;
   });
 

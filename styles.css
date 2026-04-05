@@ -65,10 +65,11 @@ header .logo-graphics {
   gap: 10px;
 }
 
-header .glass-svg {
-  width: 64px;
-  height: 86px;
-  margin-bottom: 8px;
+header .app-logo-img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  border-radius: var(--radius-md);
   filter: drop-shadow(0 4px 14px rgba(212, 168, 75, 0.35));
 }
 

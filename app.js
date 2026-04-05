@@ -122,7 +122,6 @@ function saveCollection() {
 function setupEventListeners() {
   document.getElementById('addBtn').addEventListener('click', () => openModal());
   document.getElementById('addToDbBtn').addEventListener('click', openDbModal);
-  document.getElementById('statsBtn').addEventListener('click', showStats);
   document.getElementById('closeModal').addEventListener('click', closeModal);
   document.getElementById('closeStats').addEventListener('click', () => statsModal.classList.add('hidden'));
   document.getElementById('closeDetail').addEventListener('click', () => detailModal.classList.add('hidden'));

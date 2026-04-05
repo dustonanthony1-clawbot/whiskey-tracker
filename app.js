@@ -15,6 +15,7 @@ const modal = document.getElementById('modal');
 const statsModal = document.getElementById('statsModal');
 const detailModal = document.getElementById('detailModal');
 const dbModal = document.getElementById('dbModal');
+const scannerModal = document.getElementById('scannerModal');
 const whiskeyForm = document.getElementById('whiskeyForm');
 const dbForm = document.getElementById('dbForm');
 const searchInput = document.getElementById('searchInput');
@@ -27,6 +28,8 @@ const typeInput = document.getElementById('type');
 const ageInput = document.getElementById('age');
 const abvInput = document.getElementById('abv');
 const proofInput = document.getElementById('proof');
+
+let html5QrCode = null;
 
 // Initialize Supabase
 function initSupabase() {
@@ -216,6 +219,13 @@ function setupEventListeners() {
     } else {
       contributorSection.classList.add('hidden');
     }
+  });
+  
+  // Barcode scanner button
+  document.getElementById('scanBarcodeBtn').addEventListener('click', startBarcodeScanner);
+  document.getElementById('closeScanner').addEventListener('click', stopBarcodeScanner);
+  scannerModal.addEventListener('click', (e) => {
+    if (e.target === scannerModal) stopBarcodeScanner();
   });
 }
 
@@ -639,4 +649,74 @@ function registerServiceWorker() {
       .then(reg => console.log('SW registered'))
       .catch(err => console.log('SW registration failed:', err));
   }
+}
+
+// Barcode Scanner Functions
+let html5QrCodeScanner = null;
+
+function startBarcodeScanner() {
+  const container = document.getElementById('scannerContainer');
+  container.innerHTML = '<div id="qr-reader" style="width:100%"></div>';
+  scannerModal.classList.remove('hidden');
+  
+  // Check if Html5QrCode is available
+  if (typeof Html5Qrcode === 'undefined') {
+    container.innerHTML = '<p style="color:var(--danger);padding:20px;">Loading scanner...</p>';
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js';
+    script.onload = () => initBarcodeScanner();
+    script.onerror = () => container.innerHTML = '<p style="color:var(--danger);padding:20px;">Failed to load barcode scanner.</p>';
+    document.head.appendChild(script);
+    return;
+  }
+  
+  initBarcodeScanner();
+}
+
+function initBarcodeScanner() {
+  const container = document.getElementById('scannerContainer');
+  container.innerHTML = '<div id="qr-reader" style="width:100%"></div>';
+  
+  html5QrCodeScanner = new Html5Qrcode("qr-reader");
+  
+  const config = { fps: 10, qrbox: { width: 250, height: 150 } };
+  
+  html5QrCodeScanner.start(
+    { facingMode: "environment" },
+    config,
+    onBarcodeScanSuccess,
+    onBarcodeScanFailure
+  ).catch(err => {
+    container.innerHTML = '<p style="color:var(--danger);padding:20px;">Camera access denied. Please allow camera permissions in your browser settings.</p>';
+    console.error('Camera error:', err);
+  });
+}
+
+function onBarcodeScanSuccess(decodedText) {
+  // Vibrate to indicate success
+  if (navigator.vibrate) navigator.vibrate(100);
+  
+  // Stop scanner
+  stopBarcodeScanner();
+  
+  // Put the barcode in the name field - user fills rest manually
+  // (Barcode lookup would require a product database API)
+  nameInput.value = decodedText;
+  suggestionsEl.classList.add('hidden');
+  
+  alert('Barcode scanned!\n\nCode: ' + decodedText + '\n\nPlease fill in the remaining whiskey details manually.');
+}
+
+function onBarcodeScanFailure(error) {
+  // Silently ignore scan failures - just keep trying
+}
+
+function stopBarcodeScanner() {
+  if (html5QrCodeScanner) {
+    html5QrCodeScanner.stop().then(() => {
+      html5QrCodeScanner = null;
+      document.getElementById('scannerContainer').innerHTML = '';
+    }).catch(err => console.log('Scanner stop error:', err));
+  }
+  scannerModal.classList.add('hidden');
 }

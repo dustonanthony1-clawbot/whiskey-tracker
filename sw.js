@@ -1,11 +1,13 @@
-const CACHE_NAME = 'whiskey-tracker-v2';
+const CACHE_NAME = 'whiskey-tracker-v3';
 const urlsToCache = [
   '/',
   '/index.html',
   '/styles.css',
   '/app.js',
   '/whiskey-db.js',
-  '/manifest.json'
+  '/manifest.json',
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2',
+  'https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js'
 ];
 
 self.addEventListener('install', event => {

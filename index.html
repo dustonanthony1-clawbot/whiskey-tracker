@@ -113,8 +113,23 @@
       <form id="whiskeyForm">
         <div class="form-group">
           <label for="name">Name *</label>
-          <input type="text" id="name" required placeholder="Type to search or enter custom..." autocomplete="off">
+          <div class="input-with-scan">
+            <input type="text" id="name" required placeholder="Type to search or enter custom..." autocomplete="off">
+            <button type="button" id="scanBarcodeBtn" class="scan-btn" title="Scan Barcode">📷</button>
+          </div>
           <div id="searchSuggestions" class="search-suggestions hidden"></div>
+        </div>
+        
+        <!-- Barcode Scanner Modal -->
+        <div id="scannerModal" class="modal hidden">
+          <div class="modal-content scanner-modal">
+            <div class="modal-header">
+              <h2>📷 Scan Barcode</h2>
+              <button id="closeScanner" class="close-btn">✕</button>
+            </div>
+            <div id="scannerContainer"></div>
+            <p class="scanner-hint">Point your camera at a barcode to scan</p>
+          </div>
         </div>
         <div class="form-group">
           <label for="distillery">Distillery</label>
@@ -305,6 +320,7 @@
 
   <script src="whiskey-db.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

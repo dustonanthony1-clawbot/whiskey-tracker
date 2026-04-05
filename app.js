@@ -551,21 +551,32 @@ function showDetail(id) {
       ` : ''}
     </div>
     <div class="detail-actions">
-      <button class="edit-btn" onclick="event.stopPropagation(); openModal(collection.find(w => w.id === '${whiskey.id}'))">Edit</button>
-      <button class="delete-btn" onclick="event.stopPropagation(); deleteWhiskey('${whiskey.id}')">Delete</button>
+      <button class="edit-btn" onclick="editWhiskey('${whiskey.id}')">Edit</button>
+      <button class="delete-btn" onclick="confirmDelete('${whiskey.id}')">Delete</button>
     </div>
   `;
 
   detailModal.classList.remove('hidden');
 }
 
-function deleteWhiskey(id) {
+function editWhiskey(id) {
+  const whiskey = collection.find(w => w.id === id);
+  if (!whiskey) return;
+  detailModal.classList.add('hidden');
+  openModal(whiskey);
+}
+
+function confirmDelete(id) {
   if (confirm('Delete this whiskey from your collection?')) {
     collection = collection.filter(w => w.id !== id);
     saveCollection();
     renderCollection();
     detailModal.classList.add('hidden');
   }
+}
+
+function deleteWhiskey(id) {
+  confirmDelete(id);
 }
 
 function showStats() {

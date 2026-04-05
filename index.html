@@ -66,11 +66,7 @@
           <div class="header-actions">
             <button id="addBtn" class="icon-btn" title="Add to Collection">
               <span class="btn-icon">➕</span>
-              <span class="btn-label">My Collection</span>
-            </button>
-            <button id="addToDbBtn" class="icon-btn" title="Add to Database">
-              <span class="btn-icon">🌐</span>
-              <span class="btn-label">Add to DB</span>
+              <span class="btn-label">Add Whiskey</span>
             </button>
           </div>
         </div>
@@ -180,6 +176,13 @@
         <div class="form-group">
           <label for="flavorTags">Flavor Tags</label>
           <input type="text" id="flavorTags" placeholder="e.g., vanilla, oak, cherry (comma separated)">
+        </div>
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" id="addToSharedDb">
+            <span>Also add to shared database 🌐</span>
+          </label>
+          <p class="checkbox-hint">Check this to contribute this whiskey to the shared database so others can find it</p>
         </div>
         <button type="submit" id="submitBtn" class="submit-btn">Add Whiskey</button>
       </form>

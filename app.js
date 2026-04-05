@@ -121,7 +121,6 @@ function saveCollection() {
 // Setup event listeners
 function setupEventListeners() {
   document.getElementById('addBtn').addEventListener('click', () => openModal());
-  document.getElementById('addToDbBtn').addEventListener('click', openDbModal);
   document.getElementById('closeModal').addEventListener('click', closeModal);
   document.getElementById('closeStats').addEventListener('click', () => statsModal.classList.add('hidden'));
   document.getElementById('closeDetail').addEventListener('click', () => detailModal.classList.add('hidden'));
@@ -287,6 +286,18 @@ function openModal(whiskey = null) {
   document.querySelectorAll('.star').forEach(s => s.classList.remove('active'));
   currentPhotoBase64 = null;
   document.getElementById('photoPreview').src = '';
+  
+  // Show and enable shared DB checkbox only for new entries
+  const addToSharedDbEl = document.getElementById('addToSharedDb');
+  if (editingId) {
+    addToSharedDbEl.checked = false;
+    addToSharedDbEl.disabled = true;
+    document.querySelector('.checkbox-hint').textContent = 'Editing existing entry - cannot add to shared database';
+  } else {
+    addToSharedDbEl.checked = false;
+    addToSharedDbEl.disabled = false;
+    document.querySelector('.checkbox-hint').textContent = 'Check this to contribute this whiskey to the shared database so others can find it';
+  }
 
   // Populate if editing
   if (whiskey) {
@@ -325,9 +336,24 @@ function closeModal() {
 function handleSubmit(e) {
   e.preventDefault();
 
+  const name = document.getElementById('name').value.trim();
+  
+  // Check if also adding to shared database
+  const addToSharedDb = document.getElementById('addToSharedDb').checked;
+  
+  // Check for duplicates in shared DB if checkbox is checked
+  if (addToSharedDb) {
+    const lowerName = name.toLowerCase();
+    const existingInLocal = WHISKEY_DATABASE.find(w => w.name.toLowerCase() === lowerName);
+    if (existingInLocal) {
+      alert(`"${name}" is already in our database!\n\nThis whiskey cannot be added as a duplicate.`);
+      return;
+    }
+  }
+  
   const whiskey = {
     id: editingId || Date.now().toString(),
-    name: document.getElementById('name').value.trim(),
+    name,
     distillery: document.getElementById('distillery').value.trim(),
     type: document.getElementById('type').value,
     age: document.getElementById('age').value ? parseInt(document.getElementById('age').value) : null,
@@ -351,6 +377,31 @@ function handleSubmit(e) {
     collection.push(whiskey);
   }
 
+  // If checkbox is checked, also add to shared database
+  if (addToSharedDb && !editingId) {
+    const dbWhiskey = {
+      name: whiskey.name,
+      distillery: whiskey.distillery,
+      type: whiskey.type,
+      age: whiskey.age,
+      abv: whiskey.abv,
+      proof: whiskey.proof
+    };
+    addToSharedDatabase(dbWhiskey).then(success => {
+      if (success) {
+        // Add to local DB so it shows up in search immediately
+        WHISKEY_DATABASE.push({
+          name: whiskey.name,
+          distillery: whiskey.distillery,
+          type: whiskey.type,
+          age: whiskey.age,
+          abv: whiskey.abv,
+          proof: whiskey.proof
+        });
+      }
+    });
+  }
+  
   saveCollection();
   renderCollection();
   closeModal();

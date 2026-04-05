@@ -150,10 +150,9 @@ function setFilter(filter) {
     searchSection.classList.remove('hidden');
   } else {
     searchSection.classList.add('hidden');
+    searchInput.value = ''; // Clear search when going to wishlist
   }
   
-  // Clear search when switching
-  searchInput.value = '';
   renderCollection();
 }
 
@@ -413,7 +412,7 @@ function renderCollection() {
     const matchesSearch = !searchTerm ||
       w.name.toLowerCase().includes(searchTerm) ||
       (w.distillery && w.distillery.toLowerCase().includes(searchTerm));
-    const matchesFilter = currentFilter === 'all' || w.status === currentFilter;
+    const matchesFilter = w.status === currentFilter;
     return matchesSearch && matchesFilter;
   });
 

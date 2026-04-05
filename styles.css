@@ -492,6 +492,10 @@ header .stat-label {
   display: none;
 }
 
+.search-section.hidden {
+  display: none;
+}
+
 .modal-content {
   background: var(--bg-elevated);
   border-radius: 28px 28px 0 0;

@@ -19,6 +19,7 @@ const whiskeyForm = document.getElementById('whiskeyForm');
 const dbForm = document.getElementById('dbForm');
 const searchInput = document.getElementById('searchInput');
 const filterType = document.getElementById('filterType');
+const filterStatus = document.getElementById('filterStatus');
 const suggestionsEl = document.getElementById('searchSuggestions');
 const nameInput = document.getElementById('name');
 const distilleryInput = document.getElementById('distillery');
@@ -136,6 +137,7 @@ function setupEventListeners() {
 
   searchInput.addEventListener('input', renderCollection);
   filterType.addEventListener('change', renderCollection);
+  filterStatus.addEventListener('change', renderCollection);
 
   // Smart search for whiskey name
   nameInput.addEventListener('input', (e) => {
@@ -272,6 +274,8 @@ function openModal(whiskey = null) {
     document.getElementById('datePurchased').value = whiskey.datePurchased || '';
     document.getElementById('notes').value = whiskey.notes || '';
     document.getElementById('flavorTags').value = (whiskey.flavorTags || []).join(', ');
+    document.getElementById('fillLevel').value = whiskey.fillLevel || 'sealed';
+    document.getElementById('bottleStatus').value = whiskey.status || 'owned';
 
     const rating = whiskey.rating || 0;
     document.getElementById('rating').value = rating;
@@ -328,7 +332,9 @@ function handleSubmit(e) {
       .split(',')
       .map(t => t.trim())
       .filter(t => t),
-    photo: currentPhotoBase64
+    photo: currentPhotoBase64,
+    fillLevel: document.getElementById('fillLevel').value,
+    status: document.getElementById('bottleStatus').value
   };
 
   if (editingId) {
@@ -387,7 +393,8 @@ function renderCollection() {
       w.name.toLowerCase().includes(searchTerm) ||
       (w.distillery && w.distillery.toLowerCase().includes(searchTerm));
     const matchesType = !typeFilter || w.type === typeFilter;
-    return matchesSearch && matchesType;
+    const matchesStatus = !statusFilter || w.status === statusFilter;
+    return matchesSearch && matchesType && matchesStatus;
   });
 
   // Update header stats
@@ -403,12 +410,22 @@ function renderCollection() {
 
   emptyStateEl.style.display = 'none';
 
-  collectionEl.innerHTML = filtered.map(whiskey => `
-    <div class="whiskey-card" onclick="showDetail('${whiskey.id}')">
+  collectionEl.innerHTML = filtered.map(whiskey => {
+    const fillIcon = {
+      'sealed': '🔒',
+      'open': '🍾',
+      'low': '📉',
+      'empty': '🫗'
+    }[whiskey.fillLevel] || '📦';
+    const isWishlist = whiskey.status === 'wishlist';
+    
+    return `
+    <div class="whiskey-card ${isWishlist ? 'wishlist-card' : ''}" onclick="showDetail('${whiskey.id}')">
+      ${isWishlist ? '<div class="wishlist-badge">❤️ Wishlist</div>' : ''}
       <div class="image-container">
         ${whiskey.photo
           ? `<img src="${whiskey.photo}" alt="${whiskey.name}">`
-          : `<div class="image-placeholder">🥃</div>`
+          : `<div class="image-placeholder">${fillIcon}</div>`
         }
       </div>
       <div class="card-content">
@@ -418,6 +435,7 @@ function renderCollection() {
           <span class="tag">${whiskey.type}</span>
           ${whiskey.age ? `<span class="tag">${whiskey.age}yr</span>` : ''}
           ${whiskey.abv ? `<span class="tag">${whiskey.abv}%</span>` : ''}
+          <span class="tag">${fillIcon}</span>
         </div>
         <div class="card-footer">
           <div class="rating">
@@ -427,7 +445,7 @@ function renderCollection() {
         </div>
       </div>
     </div>
-  `).join('');
+  `}).join('');
 }
 
 function showDetail(id) {
@@ -482,6 +500,23 @@ function showDetail(id) {
         <div class="detail-row">
           <span class="detail-label">Rating</span>
           <span class="detail-value">${renderStars(whiskey.rating)}</span>
+        </div>
+      ` : ''}
+      ${whiskey.fillLevel ? `
+        <div class="detail-row">
+          <span class="detail-label">Fill Level</span>
+          <span class="detail-value">${{
+            'sealed': '🔒 Sealed',
+            'open': '🍾 Opened',
+            'low': '📉 Low',
+            'empty': '🫗 Empty'
+          }[whiskey.fillLevel] || whiskey.fillLevel}</span>
+        </div>
+      ` : ''}
+      ${whiskey.status === 'wishlist' ? `
+        <div class="detail-row">
+          <span class="detail-label">Status</span>
+          <span class="detail-value">❤️ On Wishlist</span>
         </div>
       ` : ''}
       ${whiskey.notes ? `

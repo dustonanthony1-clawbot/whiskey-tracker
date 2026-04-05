@@ -631,6 +631,29 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   margin-bottom: 12px;
 }
 
+/* Wishlist card styling */
+.wishlist-card {
+  border-color: rgba(255, 100, 100, 0.3) !important;
+  position: relative;
+}
+
+.wishlist-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 12px;
+  z-index: 1;
+}
+
+.wishlist-card .image-placeholder {
+  background: linear-gradient(135deg, #2a1a1a, #1a0a0a) !important;
+}
+
 .search-suggestions {
   position: absolute;
   top: 100%;

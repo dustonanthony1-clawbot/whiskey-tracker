@@ -82,6 +82,11 @@
             <option value="Canadian">Canadian</option>
             <option value="Other">Other</option>
           </select>
+          <select id="filterStatus">
+            <option value="">All Entries</option>
+            <option value="owned">📦 In Collection</option>
+            <option value="wishlist">❤️ Wishlist</option>
+          </select>
         </div>
       </div>
     </header>
@@ -192,6 +197,26 @@
           <label for="contributorEmail" style="margin-top: 12px;">Email *</label>
           <input type="email" id="contributorEmail" placeholder="e.g., john@email.com">
           <p class="checkbox-hint">Your info is stored securely and only used for database contributions</p>
+        </div>
+        
+        <!-- Fill Level & Wishlist Section -->
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fillLevel">Fill Level</label>
+            <select id="fillLevel">
+              <option value="sealed">🔒 Sealed</option>
+              <option value="open">🍾 Opened</option>
+              <option value="low">📉 Low</option>
+              <option value="empty">🫗 Empty</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="bottleStatus">Entry Type</label>
+            <select id="bottleStatus">
+              <option value="owned">📦 In My Collection</option>
+              <option value="wishlist">❤️ On My Wishlist</option>
+            </select>
+          </div>
         </div>
         
         <button type="submit" id="submitBtn" class="submit-btn">Add Whiskey</button>

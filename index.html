@@ -64,7 +64,7 @@
             </div>
           </div>
           <div class="header-actions">
-            <button id="addBtn" class="icon-btn" title="Add to Collection">
+            <button id="addBtn" class="icon-btn" title="Add to Collection" onclick="openModal()">
               <span class="btn-icon">➕</span>
               <span class="btn-label">Add Whiskey</span>
             </button>
@@ -108,7 +108,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2 id="modalTitle">Add Whiskey</h2>
-        <button id="closeModal" class="close-btn">✕</button>
+        <button id="closeModal" class="close-btn" onclick="closeModal()">✕</button>
       </div>
       <form id="whiskeyForm">
         <div class="form-group">

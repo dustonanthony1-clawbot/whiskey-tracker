@@ -72,21 +72,10 @@
         </div>
         <div class="search-bar">
           <input type="text" id="searchInput" placeholder="Search your collection...">
-          <select id="filterType">
-            <option value="">All Types</option>
-            <option value="Bourbon">Bourbon</option>
-            <option value="Scotch">Scotch</option>
-            <option value="Rye">Rye</option>
-            <option value="Irish">Irish</option>
-            <option value="Japanese">Japanese</option>
-            <option value="Canadian">Canadian</option>
-            <option value="Other">Other</option>
-          </select>
-          <select id="filterStatus">
-            <option value="">All Entries</option>
-            <option value="owned">📦 In Collection</option>
-            <option value="wishlist">❤️ Wishlist</option>
-          </select>
+          <div class="filter-tabs">
+            <button id="filterOwned" class="filter-tab active" onclick="setFilter('owned')">📦 Collection</button>
+            <button id="filterWishlist" class="filter-tab" onclick="setFilter('wishlist')">❤️ Wishlist</button>
+          </div>
         </div>
       </div>
     </header>

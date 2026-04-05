@@ -18,8 +18,9 @@ const dbModal = document.getElementById('dbModal');
 const whiskeyForm = document.getElementById('whiskeyForm');
 const dbForm = document.getElementById('dbForm');
 const searchInput = document.getElementById('searchInput');
-const filterType = document.getElementById('filterType');
-const filterStatus = document.getElementById('filterStatus');
+const filterOwned = document.getElementById('filterOwned');
+const filterWishlist = document.getElementById('filterWishlist');
+let currentFilter = 'owned';
 const suggestionsEl = document.getElementById('searchSuggestions');
 const nameInput = document.getElementById('name');
 const distilleryInput = document.getElementById('distillery');
@@ -137,9 +138,17 @@ function setupEventListeners() {
     if (e.target === dbModal) closeDbModal();
   });
 
+// Filter tab switching
+function setFilter(filter) {
+  currentFilter = filter;
+  filterOwned.classList.toggle('active', filter === 'owned');
+  filterWishlist.classList.toggle('active', filter === 'wishlist');
+  renderCollection();
+}
+
   searchInput.addEventListener('input', renderCollection);
-  filterType.addEventListener('change', renderCollection);
-  filterStatus.addEventListener('change', renderCollection);
+  filterOwned.addEventListener('click', () => setFilter('owned'));
+  filterWishlist.addEventListener('click', () => setFilter('wishlist'));
 
   // Smart search for whiskey name
   nameInput.addEventListener('input', (e) => {
@@ -388,15 +397,13 @@ function handleSubmit(e) {
 
 function renderCollection() {
   const searchTerm = searchInput.value.toLowerCase();
-  const typeFilter = filterType.value;
 
   const filtered = collection.filter(w => {
     const matchesSearch = !searchTerm ||
       w.name.toLowerCase().includes(searchTerm) ||
       (w.distillery && w.distillery.toLowerCase().includes(searchTerm));
-    const matchesType = !typeFilter || w.type === typeFilter;
-    const matchesStatus = !statusFilter || w.status === statusFilter;
-    return matchesSearch && matchesType && matchesStatus;
+    const matchesFilter = currentFilter === 'all' || w.status === currentFilter;
+    return matchesSearch && matchesFilter;
   });
 
   // Update header stats

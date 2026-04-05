@@ -225,18 +225,34 @@ function closeDbModal() {
 async function handleDbSubmit(e) {
   e.preventDefault();
   
+  const name = document.getElementById('dbName').value.trim();
+  const distillery = document.getElementById('dbDistillery').value.trim();
+  const type = document.getElementById('dbType').value;
+  const age = document.getElementById('dbAge').value ? parseInt(document.getElementById('dbAge').value) : null;
+  const abv = document.getElementById('dbAbv').value ? parseFloat(document.getElementById('dbAbv').value) : null;
+  const proof = document.getElementById('dbProof').value ? parseInt(document.getElementById('dbProof').value) : null;
+  
+  const whiskey = {
+    name,
+    distillery,
+    type,
+    age,
+    abv,
+    proof
+  };
+  
+  // Check for duplicates in local DB (case-insensitive)
+  const lowerName = name.toLowerCase();
+  const existingInLocal = WHISKEY_DATABASE.find(w => w.name.toLowerCase() === lowerName);
+  
+  if (existingInLocal) {
+    const confirmAdd = confirm(`"${name}" is already in our database!\n\nDetails:\n- Distillery: ${existingInLocal.distillery}\n- Type: ${existingInLocal.type}\n${existingInLocal.age ? '- Age: ' + existingInLocal.age + ' years\n' : ''}${existingInLocal.abv ? '- ABV: ' + existingInLocal.abv + '%\n' : ''}\n\nStill want to add it as a duplicate?`);
+    if (!confirmAdd) return;
+  }
+  
   const submitBtn = document.getElementById('submitDbBtn');
   submitBtn.disabled = true;
   submitBtn.textContent = 'Submitting...';
-  
-  const whiskey = {
-    name: document.getElementById('dbName').value.trim(),
-    distillery: document.getElementById('dbDistillery').value.trim(),
-    type: document.getElementById('dbType').value,
-    age: document.getElementById('dbAge').value ? parseInt(document.getElementById('dbAge').value) : null,
-    abv: document.getElementById('dbAbv').value ? parseFloat(document.getElementById('dbAbv').value) : null,
-    proof: document.getElementById('dbProof').value ? parseInt(document.getElementById('dbProof').value) : null
-  };
   
   const success = await addToSharedDatabase(whiskey);
   

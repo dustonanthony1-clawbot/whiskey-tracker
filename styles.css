@@ -609,21 +609,6 @@ input::placeholder, textarea::placeholder {
   gap: 8px;
 }
 
-.suggestion-item .api-badge {
-  background: linear-gradient(135deg, #4a90a4, #357a8a);
-  color: white;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-size: 0.7rem;
-  font-weight: 500;
-}
-
-.suggestion-item .suggestion-country {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
 .search-hint {
   padding: 12px 16px;
   color: var(--text-muted);

@@ -71,15 +71,14 @@ function setupEventListeners() {
     suggestionsEl.innerHTML = `
       <div class="search-hint">Select a whiskey to auto-fill details, or type a custom name</div>
       ${results.map(w => `
-        <div class="suggestion-item" onclick="selectWhiskey('${w.name.replace(/'/g, "\\'")}', '${w.slug || ''}')">
-          <div class="suggestion-name">${escapeHtml(w.name)} ${w.apiSource === 'whiskyedition' ? '<span class="api-badge">🌐 API</span>' : ''}</div>
+        <div class="suggestion-item" onclick="selectWhiskey('${w.name.replace(/'/g, "\\'")}')">
+          <div class="suggestion-name">${escapeHtml(w.name)}</div>
           <div class="suggestion-meta">
             <span class="suggestion-tag">${w.type}</span>
             ${w.age ? `<span>${w.age} yr</span>` : ''}
             ${w.abv ? `<span>${w.abv}%</span>` : ''}
             <span>${escapeHtml(w.distillery)}</span>
           </div>
-          ${w.country ? `<div class="suggestion-country">${escapeHtml(w.country)}</div>` : ''}
         </div>
       `).join('')}
     `;
@@ -395,18 +394,6 @@ function formatDate(dateStr) {
   return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 }
 
-function mapWhiskyType(apiType) {
-  if (!apiType) return 'Other';
-  const lower = apiType.toLowerCase();
-  if (lower.includes('bourbon') || lower.includes('whiskey') && lower.includes('american')) return 'Bourbon';
-  if (lower.includes('scotch') || lower.includes('whisky')) return 'Scotch';
-  if (lower.includes('rye')) return 'Rye';
-  if (lower.includes('irish') || lower.includes('eire')) return 'Irish';
-  if (lower.includes('japanese') || lower.includes('japan')) return 'Japanese';
-  if (lower.includes('canadian') || lower.includes('canada')) return 'Canadian';
-  return 'Other';
-}
-
 function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
@@ -414,53 +401,8 @@ function escapeHtml(text) {
 }
 
 // Auto-fill form when a whiskey is selected from suggestions
-async function selectWhiskey(name, slug = null) {
-  // Find in local DB first
-  let whiskey = WHISKEY_DATABASE.find(w => w.name === name);
-  
-  // If not found and we have a slug, fetch from API
-  if (!whiskey && slug) {
-    try {
-      const detail = await getWhiskyDetail(slug);
-      if (detail && detail.metadata) {
-        nameInput.value = detail.name || name;
-        distilleryInput.value = detail.metadata.distillery || '';
-        typeInput.value = mapWhiskyType(detail.metadata.type);
-        ageInput.value = detail.metadata.age || '';
-        abvInput.value = detail.metadata.abv || '';
-        if (detail.metadata.abv) {
-          proofInput.value = Math.round(detail.metadata.abv * 2);
-        }
-        
-        // Pre-fill tasting notes if available
-        if (detail.tasting_notes) {
-          const notes = [];
-          if (detail.tasting_notes.nose) notes.push('Nose: ' + detail.tasting_notes.nose);
-          if (detail.tasting_notes.palate) notes.push('Palate: ' + detail.tasting_notes.palate);
-          if (detail.tasting_notes.finish) notes.push('Finish: ' + detail.tasting_notes.finish);
-          if (notes.length > 0) {
-            document.getElementById('notes').value = notes.join('\n');
-          }
-        }
-        
-        // Set rating from API (average of Marcel and Sascha, converted to 5 stars)
-        if (detail.rating) {
-          const avgRating = Math.round((detail.rating.marcel + detail.rating.sascha) / 2 / 20);
-          document.getElementById('rating').value = avgRating;
-          document.querySelectorAll('.star').forEach((s, i) => {
-            s.classList.toggle('active', i < avgRating);
-          });
-        }
-        
-        suggestionsEl.classList.add('hidden');
-        document.getElementById('price').focus();
-        return;
-      }
-    } catch (e) {
-      console.log('Could not fetch details:', e);
-    }
-  }
-  
+function selectWhiskey(name) {
+  const whiskey = WHISKEY_DATABASE.find(w => w.name === name);
   if (!whiskey) return;
   
   nameInput.value = whiskey.name;

@@ -1081,6 +1081,15 @@ textarea {
     font-size: 1.25rem;
   }
   
+  .search-bar {
+    flex-wrap: wrap;
+  }
+  
+  .search-bar select {
+    flex: 1;
+    min-width: calc(50% - 4px);
+  }
+  
   .collection {
     grid-template-columns: 1fr;
     padding: 0 20px;

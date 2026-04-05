@@ -607,6 +607,30 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   margin-left: 34px;
 }
 
+/* Contributor section - hidden by default */
+.contributor-section {
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent-dim);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.contributor-section.hidden {
+  display: none;
+}
+
+.contributor-section label {
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.contributor-section input {
+  margin-bottom: 12px;
+}
+
 .search-suggestions {
   position: absolute;
   top: 100%;

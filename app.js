@@ -204,6 +204,17 @@ function setupEventListeners() {
   
   // Database submission form
   dbForm.addEventListener('submit', handleDbSubmit);
+  
+  // Show/hide contributor section based on DB checkbox
+  document.getElementById('addToSharedDb').addEventListener('change', (e) => {
+    const contributorSection = document.getElementById('contributorSection');
+    if (e.target.checked) {
+      contributorSection.classList.remove('hidden');
+      document.getElementById('contributorName').focus();
+    } else {
+      contributorSection.classList.add('hidden');
+    }
+  });
 }
 
 // Open Database Modal
@@ -219,60 +230,10 @@ function closeDbModal() {
   dbModal.classList.add('hidden');
 }
 
-// Handle Database Submission
+// Handle Database Submission - DEPRECATED (using inline form now)
 async function handleDbSubmit(e) {
   e.preventDefault();
-  
-  const name = document.getElementById('dbName').value.trim();
-  const distillery = document.getElementById('dbDistillery').value.trim();
-  const type = document.getElementById('dbType').value;
-  const age = document.getElementById('dbAge').value ? parseInt(document.getElementById('dbAge').value) : null;
-  const abv = document.getElementById('dbAbv').value ? parseFloat(document.getElementById('dbAbv').value) : null;
-  const proof = document.getElementById('dbProof').value ? parseInt(document.getElementById('dbProof').value) : null;
-  
-  const whiskey = {
-    name,
-    distillery,
-    type,
-    age,
-    abv,
-    proof
-  };
-  
-  // Check for duplicates in local DB (case-insensitive)
-  const lowerName = name.toLowerCase();
-  const existingInLocal = WHISKEY_DATABASE.find(w => w.name.toLowerCase() === lowerName);
-  
-  if (existingInLocal) {
-    alert(`"${name}" is already in our database!\n\nThis whiskey cannot be added as a duplicate.`);
-    return;
-  }
-  
-  const submitBtn = document.getElementById('submitDbBtn');
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Submitting...';
-  
-  const success = await addToSharedDatabase(whiskey);
-  
-  if (success) {
-    // Add to local DB so it shows up in search immediately
-    WHISKEY_DATABASE.push({
-      name: whiskey.name,
-      distillery: whiskey.distillery,
-      type: whiskey.type,
-      age: whiskey.age,
-      abv: whiskey.abv,
-      proof: whiskey.proof
-    });
-    
-    dbForm.classList.add('hidden');
-    document.getElementById('dbSuccess').classList.remove('hidden');
-  } else {
-    alert('Failed to submit. Please try again. Make sure the whiskey isn\'t already in the database.');
-  }
-  
-  submitBtn.disabled = false;
-  submitBtn.textContent = 'Submit to Database';
+  alert('Please use the "Add Whiskey" button to add to the shared database.');
 }
 
 function openModal(whiskey = null) {
@@ -379,13 +340,23 @@ function handleSubmit(e) {
 
   // If checkbox is checked, also add to shared database
   if (addToSharedDb && !editingId) {
+    const contributorName = document.getElementById('contributorName').value.trim();
+    const contributorEmail = document.getElementById('contributorEmail').value.trim();
+    
+    if (!contributorName || !contributorEmail) {
+      alert('Please provide your name and email to contribute to the database.');
+      return;
+    }
+    
     const dbWhiskey = {
       name: whiskey.name,
       distillery: whiskey.distillery,
       type: whiskey.type,
       age: whiskey.age,
       abv: whiskey.abv,
-      proof: whiskey.proof
+      proof: whiskey.proof,
+      contributor_name: contributorName,
+      contributor_email: contributorEmail
     };
     addToSharedDatabase(dbWhiskey).then(success => {
       if (success) {

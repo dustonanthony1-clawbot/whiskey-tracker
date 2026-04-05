@@ -6,7 +6,7 @@ let currentPhotoBase64 = null;
 // Supabase Configuration
 const SUPABASE_URL = 'https://hzkhvnqhepxadwxdtnih.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_TMJiyaGhOmZsgsOEcS5s5g_XArNhn9G';
-let supabase = null;
+let supabaseClient = null;
 
 // DOM Elements
 const collectionEl = document.getElementById('collection');
@@ -30,7 +30,7 @@ const proofInput = document.getElementById('proof');
 // Initialize Supabase
 function initSupabase() {
   try {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     console.log('Supabase initialized successfully');
   } catch (err) {
     console.error('Supabase init failed:', err);
@@ -39,9 +39,9 @@ function initSupabase() {
 
 // Load shared whiskeys from Supabase
 async function loadSharedWhiskeys() {
-  if (!supabase) return [];
+  if (!supabaseClient) return [];
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('whiskeys')
       .select('*')
       .order('created_at', { ascending: false });
@@ -55,12 +55,12 @@ async function loadSharedWhiskeys() {
 
 // Add whiskey to shared Supabase database
 async function addToSharedDatabase(whiskey) {
-  if (!supabase) {
+  if (!supabaseClient) {
     alert('Database not connected. Please check your internet connection.');
     return false;
   }
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('whiskeys')
       .insert([{
         name: whiskey.name,
@@ -561,11 +561,10 @@ function selectWhiskey(name) {
   document.getElementById('price').focus();
 }
 
-// Service Worker Registration - DISABLED FOR DEBUGGING
-// function registerServiceWorker() {
-//   if ('serviceWorker' in navigator) {
-//     navigator.serviceWorker.register('sw.js')
-//       .then(reg => console.log('SW registered'))
-//       .catch(err => console.log('SW registration failed:', err));
-//   }
-// }
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('SW registered'))
+      .catch(err => console.log('SW registration failed:', err));
+  }
+}

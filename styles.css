@@ -1081,13 +1081,35 @@ textarea {
     font-size: 1.25rem;
   }
   
+  .header-actions {
+    gap: 8px;
+  }
+  
+  .icon-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .icon-btn .btn-icon {
+    font-size: 0.9rem;
+  }
+  
   .search-bar {
-    flex-wrap: wrap;
+    gap: 6px;
   }
   
   .search-bar select {
+    padding: 10px 12px;
+    font-size: 0.8rem;
+    min-width: auto;
     flex: 1;
-    min-width: calc(50% - 4px);
+    background-position: right 10px center;
+    padding-right: 30px;
+  }
+  
+  .search-bar input {
+    padding: 10px 14px;
+    font-size: 0.9rem;
   }
   
   .collection {

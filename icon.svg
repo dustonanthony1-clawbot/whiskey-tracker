@@ -1,32 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
   <defs>
-    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#d4a84b"/>
-      <stop offset="50%" style="stop-color:#e8c06a"/>
-      <stop offset="100%" style="stop-color:#d4a84b"/>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#d4a84b"/>
+      <stop offset="50%" stop-color="#e8c06a"/>
+      <stop offset="100%" stop-color="#c9962f"/>
     </linearGradient>
-    <linearGradient id="darkBg" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#1a1a1f"/>
-      <stop offset="100%" style="stop-color:#08080a"/>
-    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
   </defs>
   
-  <!-- Background -->
-  <rect fill="url(#darkBg)" width="512" height="512" rx="96"/>
+  <!-- Dark background -->
+  <rect fill="#08080a" width="1024" height="1024" rx="180"/>
   
-  <!-- Outer ring / barrel shape -->
-  <circle cx="256" cy="256" r="200" fill="none" stroke="url(#gold)" stroke-width="16"/>
+  <!-- Outer golden ring / barrel hoop -->
+  <circle cx="512" cy="512" r="420" fill="none" stroke="url(#goldGrad)" stroke-width="32" filter="url(#glow)"/>
   
-  <!-- Inner barrel staves pattern -->
-  <ellipse cx="256" cy="256" rx="140" ry="140" fill="none" stroke="url(#gold)" stroke-width="8"/>
+  <!-- Inner ring -->
+  <circle cx="512" cy="512" r="340" fill="none" stroke="url(#goldGrad)" stroke-width="20" opacity="0.6"/>
+  
+  <!-- Barrel stave lines -->
+  <g stroke="url(#goldGrad)" stroke-width="14" opacity="0.5">
+    <line x1="512" y1="172" x2="512" y2="852"/>
+    <line x1="295" y1="280" x2="729" y2="744"/>
+    <line x1="729" y1="280" x2="295" y2="744"/>
+    <line x1="230" y1="420" x2="794" y2="604"/>
+    <line x1="794" y1="420" x2="230" y2="604"/>
+  </g>
   
   <!-- Barrel bands -->
-  <rect x="116" y="180" width="280" height="16" rx="8" fill="url(#gold)"/>
-  <rect x="116" y="316" width="280" height="16" rx="8" fill="url(#gold)"/>
+  <rect x="170" y="380" width="684" height="28" rx="14" fill="url(#goldGrad)" filter="url(#glow)"/>
+  <rect x="170" y="616" width="684" height="28" rx="14" fill="url(#goldGrad)" filter="url(#glow)"/>
   
-  <!-- Letter B -->
-  <text x="256" y="290" font-family="Georgia, serif" font-size="180" font-weight="bold" fill="url(#gold)" text-anchor="middle">B</text>
+  <!-- "BP" letters -->
+  <text x="512" y="580" font-family="Georgia, 'Times New Roman', serif" font-size="280" font-weight="bold" fill="url(#goldGrad)" text-anchor="middle" letter-spacing="-10">BP</text>
   
-  <!-- Letter P -->
-  <text x="256" y="430" font-family="Georgia, serif" font-size="180" font-weight="bold" fill="url(#gold)" text-anchor="middle">P</text>
+  <!-- Shine effect on top -->
+  <ellipse cx="512" cy="280" rx="200" ry="60" fill="url(#goldGrad)" opacity="0.15"/>
 </svg>

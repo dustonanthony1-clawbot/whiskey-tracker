@@ -940,3 +940,33 @@ textarea {
     padding: 20px;
   }
 }
+
+/* Add to Database Modal */
+.db-intro {
+  padding: 0 20px 16px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0;
+  text-align: center;
+}
+
+.db-success {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.db-success .success-icon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.db-success h3 {
+  color: var(--accent);
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+}
+
+.db-success p {
+  color: var(--text-muted);
+  margin: 0;
+}

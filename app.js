@@ -3,13 +3,20 @@ let collection = [];
 let editingId = null;
 let currentPhotoBase64 = null;
 
+// Supabase Configuration
+const SUPABASE_URL = 'https://hzkhvnqhepxadwxdtnih.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_TMJiyaGhOmZsgsOEcS5s5g_XArNhn9G';
+let supabase = null;
+
 // DOM Elements
 const collectionEl = document.getElementById('collection');
 const emptyStateEl = document.getElementById('emptyState');
 const modal = document.getElementById('modal');
 const statsModal = document.getElementById('statsModal');
 const detailModal = document.getElementById('detailModal');
+const dbModal = document.getElementById('dbModal');
 const whiskeyForm = document.getElementById('whiskeyForm');
+const dbForm = document.getElementById('dbForm');
 const searchInput = document.getElementById('searchInput');
 const filterType = document.getElementById('filterType');
 const suggestionsEl = document.getElementById('searchSuggestions');
@@ -20,12 +27,84 @@ const ageInput = document.getElementById('age');
 const abvInput = document.getElementById('abv');
 const proofInput = document.getElementById('proof');
 
+// Initialize Supabase
+function initSupabase() {
+  try {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('Supabase initialized successfully');
+  } catch (err) {
+    console.error('Supabase init failed:', err);
+  }
+}
+
+// Load shared whiskeys from Supabase
+async function loadSharedWhiskeys() {
+  if (!supabase) return [];
+  try {
+    const { data, error } = await supabase
+      .from('whiskeys')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return data || [];
+  } catch (err) {
+    console.log('Could not load from Supabase, using local DB');
+    return [];
+  }
+}
+
+// Add whiskey to shared Supabase database
+async function addToSharedDatabase(whiskey) {
+  if (!supabase) {
+    alert('Database not connected. Please check your internet connection.');
+    return false;
+  }
+  try {
+    const { data, error } = await supabase
+      .from('whiskeys')
+      .insert([{
+        name: whiskey.name,
+        distillery: whiskey.distillery,
+        type: whiskey.type,
+        age: whiskey.age,
+        abv: whiskey.abv,
+        proof: whiskey.proof
+      }]);
+    if (error) throw error;
+    return true;
+  } catch (err) {
+    console.error('Failed to add to database:', err);
+    return false;
+  }
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+  initSupabase();
   loadCollection();
   renderCollection();
   setupEventListeners();
   registerServiceWorker();
+  
+  // Also load shared whiskeys into local DB for search
+  loadSharedWhiskeys().then(sharedWhiskeys => {
+    if (sharedWhiskeys.length > 0) {
+      // Merge with existing WHISKEY_DATABASE
+      const existingNames = new Set(WHISKEY_DATABASE.map(w => w.name));
+      sharedWhiskeys.forEach(w => {
+        if (!existingNames.has(w.name)) {
+          WHISKEY_DATABASE.push({
+            name: w.name,
+            distillery: w.distillery || '',
+            type: w.type || 'Other',
+            age: w.age || null,
+            abv: w.abv || null,
+            proof: w.proof || null
+          });
+        }
+      });
+    }
+  });
 });
 
 // Load from localStorage
@@ -42,13 +121,19 @@ function saveCollection() {
 // Setup event listeners
 function setupEventListeners() {
   document.getElementById('addBtn').addEventListener('click', () => openModal());
+  document.getElementById('addToDbBtn').addEventListener('click', openDbModal);
   document.getElementById('statsBtn').addEventListener('click', showStats);
   document.getElementById('closeModal').addEventListener('click', closeModal);
   document.getElementById('closeStats').addEventListener('click', () => statsModal.classList.add('hidden'));
   document.getElementById('closeDetail').addEventListener('click', () => detailModal.classList.add('hidden'));
+  document.getElementById('closeDbModal').addEventListener('click', closeDbModal);
 
   modal.addEventListener('click', (e) => {
     if (e.target === modal) closeModal();
+  });
+
+  dbModal.addEventListener('click', (e) => {
+    if (e.target === dbModal) closeDbModal();
   });
 
   searchInput.addEventListener('input', renderCollection);
@@ -118,6 +203,62 @@ function setupEventListeners() {
   });
 
   whiskeyForm.addEventListener('submit', handleSubmit);
+  
+  // Database submission form
+  dbForm.addEventListener('submit', handleDbSubmit);
+}
+
+// Open Database Modal
+function openDbModal() {
+  dbForm.classList.remove('hidden');
+  document.getElementById('dbSuccess').classList.add('hidden');
+  dbForm.reset();
+  dbModal.classList.remove('hidden');
+}
+
+// Close Database Modal
+function closeDbModal() {
+  dbModal.classList.add('hidden');
+}
+
+// Handle Database Submission
+async function handleDbSubmit(e) {
+  e.preventDefault();
+  
+  const submitBtn = document.getElementById('submitDbBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
+  
+  const whiskey = {
+    name: document.getElementById('dbName').value.trim(),
+    distillery: document.getElementById('dbDistillery').value.trim(),
+    type: document.getElementById('dbType').value,
+    age: document.getElementById('dbAge').value ? parseInt(document.getElementById('dbAge').value) : null,
+    abv: document.getElementById('dbAbv').value ? parseFloat(document.getElementById('dbAbv').value) : null,
+    proof: document.getElementById('dbProof').value ? parseInt(document.getElementById('dbProof').value) : null
+  };
+  
+  const success = await addToSharedDatabase(whiskey);
+  
+  if (success) {
+    // Add to local DB so it shows up in search immediately
+    WHISKEY_DATABASE.push({
+      name: whiskey.name,
+      distillery: whiskey.distillery,
+      type: whiskey.type,
+      age: whiskey.age,
+      abv: whiskey.abv,
+      proof: whiskey.proof
+    });
+    
+    dbForm.classList.add('hidden');
+    document.getElementById('dbSuccess').classList.remove('hidden');
+  } else {
+    alert('Failed to submit. Please try again. Make sure the whiskey isn\'t already in the database.');
+  }
+  
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Submit to Database';
 }
 
 function openModal(whiskey = null) {

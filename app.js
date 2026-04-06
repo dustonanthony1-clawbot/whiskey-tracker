@@ -199,6 +199,7 @@ function setFilter(filter) {
   });
   
 function setRating(rating) {
+  console.log('setRating called with:', rating);
   document.getElementById('rating').value = rating;
   document.querySelectorAll('.rating-input .star').forEach((s, i) => {
     s.classList.toggle('active', i < rating);

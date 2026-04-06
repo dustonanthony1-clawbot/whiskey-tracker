@@ -372,23 +372,13 @@ function handleSubmit(e) {
 
   // If checkbox is checked, also add to shared database
   if (addToSharedDb && !editingId) {
-    const contributorName = document.getElementById('contributorName').value.trim();
-    const contributorEmail = document.getElementById('contributorEmail').value.trim();
-    
-    if (!contributorName || !contributorEmail) {
-      alert('Please provide your name and email to contribute to the database.');
-      return;
-    }
-    
     const dbWhiskey = {
       name: whiskey.name,
       distillery: whiskey.distillery,
       type: whiskey.type,
       age: whiskey.age,
       abv: whiskey.abv,
-      proof: whiskey.proof,
-      contributor_name: contributorName,
-      contributor_email: contributorEmail
+      proof: whiskey.proof
     };
     addToSharedDatabase(dbWhiskey).then(success => {
       if (success) {

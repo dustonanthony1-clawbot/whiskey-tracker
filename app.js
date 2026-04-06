@@ -2,6 +2,8 @@ const STORAGE_KEY = 'whiskey_collection';
 let collection = [];
 let editingId = null;
 let currentPhotoBase64 = null;
+let currentUser = null;
+let syncEnabled = false;
 
 // Supabase Configuration
 const SUPABASE_URL = 'https://hzkhvnqhepxadwxdtnih.supabase.co';
@@ -30,6 +32,24 @@ const abvInput = document.getElementById('abv');
 const proofInput = document.getElementById('proof');
 
 let html5QrCode = null;
+
+// Auth Modal Elements
+const authModal = document.getElementById('authModal');
+const authTitle = document.getElementById('authTitle');
+const authLoggedOut = document.getElementById('authLoggedOut');
+const authSignup = document.getElementById('authSignup');
+const authLoggedIn = document.getElementById('authLoggedIn');
+const authMessage = document.getElementById('authMessage');
+const loginForm = document.getElementById('loginForm');
+const signupForm = document.getElementById('signupForm');
+const showSignupBtn = document.getElementById('showSignupBtn');
+const showLoginBtn = document.getElementById('showLoginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const userNameEl = document.getElementById('userName');
+const userEmailEl = document.getElementById('userEmail');
+const syncTextEl = document.getElementById('syncText');
+const authBtn = document.getElementById('authBtn');
+const authBtnLabel = document.getElementById('authBtnLabel');
 
 // Initialize Supabase
 function initSupabase() {
@@ -85,6 +105,7 @@ async function addToSharedDatabase(whiskey) {
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   initSupabase();
+  initAuthListener();
   loadCollection();
   renderCollection();
   setupEventListeners();
@@ -120,7 +141,219 @@ function loadCollection() {
 // Save to localStorage
 function saveCollection() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(collection));
+  // If logged in, sync to cloud
+  if (syncEnabled && currentUser) {
+    syncCollectionToCloud();
+  }
 }
+
+// Auth Modal Functions
+function openAuthModal() {
+  authModal.classList.remove('hidden');
+  if (currentUser) {
+    showLoggedInUI();
+  } else {
+    showLoggedOutUI();
+  }
+}
+
+function closeAuthModal() {
+  authModal.classList.add('hidden');
+  authMessage.classList.add('hidden');
+}
+
+function showLoggedOutUI() {
+  authTitle.textContent = 'Account';
+  authLoggedOut.classList.remove('hidden');
+  authSignup.classList.add('hidden');
+  authLoggedIn.classList.add('hidden');
+  authMessage.classList.add('hidden');
+  loginForm.reset();
+  signupForm.reset();
+}
+
+function showLoggedInUI() {
+  authTitle.textContent = 'My Account';
+  authLoggedOut.classList.add('hidden');
+  authSignup.classList.add('hidden');
+  authLoggedIn.classList.remove('hidden');
+  authMessage.classList.add('hidden');
+  userNameEl.textContent = currentUser.name || 'User';
+  userEmailEl.textContent = currentUser.email;
+  updateSyncStatus('Collection synced');
+}
+
+function showAuthMessage(message, type = 'error') {
+  authMessage.textContent = message;
+  authMessage.className = 'auth-message ' + type;
+  authMessage.classList.remove('hidden');
+}
+
+function updateSyncStatus(text) {
+  syncTextEl.textContent = text;
+}
+
+function updateAuthButton() {
+  if (currentUser) {
+    authBtnLabel.textContent = currentUser.name || 'Account';
+  } else {
+    authBtnLabel.textContent = 'Account';
+  }
+}
+
+// Sign Up
+async function signUp(email, password, name) {
+  if (!supabaseClient) {
+    showAuthMessage('Cloud sync not available');
+    return { error: 'No supabase client' };
+  }
+  
+  const { data, error } = await supabaseClient.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { name }
+    }
+  });
+  
+  if (error) {
+    showAuthMessage(error.message, 'error');
+    return { error };
+  }
+  
+  return { data };
+}
+
+// Sign In
+async function signIn(email, password) {
+  if (!supabaseClient) {
+    showAuthMessage('Cloud sync not available');
+    return { error: 'No supabase client' };
+  }
+  
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
+  
+  if (error) {
+    showAuthMessage(error.message, 'error');
+    return { error };
+  }
+  
+  return { data };
+}
+
+// Sign Out
+async function signOut() {
+  if (!supabaseClient) return;
+  
+  const { error } = await supabaseClient.auth.signOut();
+  if (error) {
+    console.error('Sign out error:', error);
+  }
+  currentUser = null;
+  syncEnabled = false;
+  updateAuthButton();
+  showLoggedOutUI();
+}
+
+// Initialize auth state listener
+function initAuthListener() {
+  if (!supabaseClient) return;
+  
+  // Check existing session
+  supabaseClient.auth.getSession().then(({ data: { session } }) => {
+    if (session?.user) {
+      handleAuthStateChange(session.user);
+    }
+  });
+  
+  // Listen for auth changes
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session?.user) {
+      handleAuthStateChange(session.user);
+    } else if (event === 'SIGNED_OUT') {
+      handleAuthStateChange(null);
+    }
+  });
+}
+
+function handleAuthStateChange(user) {
+  if (user) {
+    currentUser = {
+      id: user.id,
+      email: user.email,
+      name: user.user_metadata?.name || ''
+    };
+    syncEnabled = true;
+    updateAuthButton();
+    if (!collection || collection.length === 0) {
+      loadCollectionFromCloud();
+    } else {
+      syncCollectionToCloud();
+    }
+    if (document.getElementById('authModal').classList.contains('hidden') === false) {
+      showLoggedInUI();
+    }
+  } else {
+    currentUser = null;
+    syncEnabled = false;
+    updateAuthButton();
+  }
+}
+
+// Cloud sync functions
+async function syncCollectionToCloud() {
+  if (!supabaseClient || !currentUser) return;
+  
+  try {
+    const { data, error } = await supabaseClient
+      .from('user_collections')
+      .upsert({
+        user_id: currentUser.id,
+        collection_data: collection,
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'user_id' });
+    
+    if (error) {
+      console.error('Sync to cloud failed:', error);
+      updateSyncStatus('Sync failed');
+    } else {
+      updateSyncStatus('Collection synced');
+    }
+  } catch (err) {
+    console.error('Sync error:', err);
+    updateSyncStatus('Sync failed');
+  }
+}
+
+async function loadCollectionFromCloud() {
+  if (!supabaseClient || !currentUser) return;
+  
+  try {
+    const { data, error } = await supabaseClient
+      .from('user_collections')
+      .select('collection_data')
+      .eq('user_id', currentUser.id)
+      .single();
+    
+    if (error && error.code !== 'PGRST116') {
+      console.error('Load from cloud failed:', error);
+      return;
+    }
+    
+    if (data?.collection_data && Array.isArray(data.collection_data)) {
+      collection = data.collection_data;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(collection));
+      renderCollection();
+      updateSyncStatus('Collection loaded from cloud');
+    }
+  } catch (err) {
+    console.error('Load error:', err);
+  }
+}
+
 
 // Setup event listeners
 function setupEventListeners() {
@@ -138,7 +371,53 @@ function setupEventListeners() {
     if (e.target === dbModal) closeDbModal();
   });
 
-// Filter tab switching
+  // Auth modal events
+  document.getElementById('closeAuthModal').addEventListener('click', closeAuthModal);
+  authModal.addEventListener('click', (e) => {
+    if (e.target === authModal) closeAuthModal();
+  });
+
+  // Auth forms
+  showSignupBtn.addEventListener('click', () => {
+    authLoggedOut.classList.add('hidden');
+    authSignup.classList.remove('hidden');
+    authMessage.classList.add('hidden');
+  });
+
+  showLoginBtn.addEventListener('click', () => {
+    authSignup.classList.add('hidden');
+    authLoggedOut.classList.remove('hidden');
+    authMessage.classList.add('hidden');
+  });
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('authEmail').value;
+    const password = document.getElementById('authPassword').value;
+    showAuthMessage('Signing in...', 'success');
+    const { error } = await signIn(email, password);
+    if (!error) {
+      closeAuthModal();
+    }
+  });
+
+  signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+    const name = document.getElementById('signupName').value;
+    showAuthMessage('Creating account...', 'success');
+    const { error } = await signUp(email, password, name);
+    if (!error) {
+      showAuthMessage('Account created! Check your email to confirm.', 'success');
+    }
+  });
+
+  logoutBtn.addEventListener('click', async () => {
+    await signOut();
+    showLoggedOutUI();
+  });
+}
 function setFilter(filter) {
   currentFilter = filter;
   filterOwned.classList.toggle('active', filter === 'owned');

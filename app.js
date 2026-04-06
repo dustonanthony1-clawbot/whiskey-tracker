@@ -182,6 +182,8 @@ function showLoggedInUI() {
   authSignup.classList.add('hidden');
   authLoggedIn.classList.remove('hidden');
   authMessage.classList.add('hidden');
+  loginForm.reset();
+  signupForm.reset();
   userNameEl.textContent = currentUser.name || 'User';
   userEmailEl.textContent = currentUser.email;
   updateSyncStatus('Collection synced');

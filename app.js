@@ -52,16 +52,12 @@ const authBtn = document.getElementById('authBtn');
 const authBtnLabel = document.getElementById('authBtnLabel');
 
 // Initialize Supabase
-let supabaseInitialized = false;
-
 function initSupabase() {
   try {
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    supabaseInitialized = true;
     console.log('Supabase initialized successfully');
   } catch (err) {
     console.error('Supabase init failed:', err);
-    supabaseInitialized = false;
   }
 }
 
@@ -154,25 +150,20 @@ function saveCollection() {
 // Auth Modal Functions
 async function openAuthModal() {
   authModal.classList.remove('hidden');
-  authMessage.classList.add('hidden');
   
   // Check current session before deciding which UI to show
   if (supabaseClient) {
-    try {
-      const { data: { session } } = await supabaseClient.auth.getSession();
-      if (session?.user) {
-        currentUser = {
-          id: session.user.id,
-          email: session.user.email,
-          name: session.user.user_metadata?.name || ''
-        };
-        syncEnabled = true;
-        updateAuthButton();
-        showLoggedInUI();
-        return;
-      }
-    } catch (err) {
-      console.error('Error getting session:', err);
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session?.user) {
+      currentUser = {
+        id: session.user.id,
+        email: session.user.email,
+        name: session.user.user_metadata?.name || ''
+      };
+      syncEnabled = true;
+      updateAuthButton();
+      showLoggedInUI();
+      return;
     }
   }
   
@@ -257,10 +248,9 @@ async function signUp(email, password, name) {
 
 // Sign In
 async function signIn(email, password) {
-  if (!supabaseClient || !supabaseInitialized) {
-    showAuthMessage('Cloud sync not available. Please check your internet connection.', 'error');
-    console.error('Supabase not initialized');
-    return { error: 'Not initialized' };
+  if (!supabaseClient) {
+    showAuthMessage('Cloud sync not available');
+    return { error: 'No supabase client' };
   }
   
   const { data, error } = await supabaseClient.auth.signInWithPassword({
@@ -287,7 +277,6 @@ async function signOut() {
   currentUser = null;
   syncEnabled = false;
   updateAuthButton();
-  showLoggedOutUI();
   closeAuthModal();
 }
 
@@ -428,15 +417,7 @@ function setupEventListeners() {
     const email = document.getElementById('authEmail').value;
     const password = document.getElementById('authPassword').value;
     showAuthMessage('Signing in...', 'success');
-    console.log('Login form submitted, email:', email);
-    if (!supabaseClient) {
-      showAuthMessage('Supabase not initialized', 'error');
-      console.error('Supabase client is null!');
-      return;
-    }
-    console.log('Calling signIn...');
     const { error } = await signIn(email, password);
-    console.log('signIn completed, error:', error);
     if (!error) {
       closeAuthModal();
     }
@@ -459,6 +440,7 @@ function setupEventListeners() {
 
   logoutBtn.addEventListener('click', async () => {
     await signOut();
+    showLoggedOutUI();
   });
 
   searchInput.addEventListener('input', renderCollection);

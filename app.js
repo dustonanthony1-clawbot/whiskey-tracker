@@ -160,6 +160,10 @@ function openAuthModal() {
 function closeAuthModal() {
   authModal.classList.add('hidden');
   authMessage.classList.add('hidden');
+  loginForm.reset();
+  signupForm.reset();
+  authMessage.classList.add('hidden');
+  authMessage.textContent = '';
 }
 
 function showLoggedOutUI() {
@@ -255,7 +259,7 @@ async function signOut() {
   currentUser = null;
   syncEnabled = false;
   updateAuthButton();
-  showLoggedOutUI();
+  closeAuthModal();
 }
 
 // Initialize auth state listener

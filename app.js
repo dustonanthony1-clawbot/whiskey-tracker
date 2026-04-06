@@ -418,9 +418,7 @@ function renderCollection() {
 
   // Update header stats - only owned bottles (not wishlist)
   const ownedBottles = collection.filter(w => w.status !== 'wishlist');
-  const totalValue = ownedBottles.reduce((sum, w) => sum + (w.price || 0), 0);
   document.getElementById('totalCount').textContent = ownedBottles.length;
-  document.getElementById('totalValue').textContent = '$' + totalValue.toFixed(0);
 
   if (collection.length === 0) {
     emptyStateEl.style.display = 'block';

@@ -35,4 +35,14 @@ filesToCopy.forEach(file => {
   }
 });
 
+// Copy Supabase JS from node_modules
+const supabaseSrc = path.join(srcDir, 'node_modules', '@supabase', 'supabase-js', 'dist', 'umd', 'supabase.js');
+const supabaseDest = path.join(distDir, 'supabase.js');
+if (fs.existsSync(supabaseSrc)) {
+  fs.copyFileSync(supabaseSrc, supabaseDest);
+  console.log('Copied: supabase.js (local bundle)');
+} else {
+  console.warn('Supabase bundle not found at:', supabaseSrc);
+}
+
 console.log('Build complete!');

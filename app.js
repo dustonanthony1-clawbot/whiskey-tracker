@@ -198,16 +198,12 @@ function setFilter(filter) {
     }
   });
   
-  // Star rating
-  document.querySelectorAll('.star').forEach(star => {
-    star.addEventListener('click', () => {
-      const rating = star.dataset.rating;
-      document.getElementById('rating').value = rating;
-      document.querySelectorAll('.star').forEach((s, i) => {
-        s.classList.toggle('active', i < rating);
-      });
-    });
+function setRating(rating) {
+  document.getElementById('rating').value = rating;
+  document.querySelectorAll('.rating-input .star').forEach((s, i) => {
+    s.classList.toggle('active', i < rating);
   });
+}
 
   // Photo preview
   document.getElementById('photo').addEventListener('change', (e) => {
@@ -629,8 +625,8 @@ function showStats() {
 }
 
 function renderStars(rating) {
-  if (!rating) return '<span class="star">☆</span><span class="star">☆</span><span class="star">☆</span><span class="star">☆</span><span class="star">☆</span>';
-  return '★'.repeat(rating).split('').map(() => '<span class="star">★</span>').join('') + '☆'.repeat(5 - rating).split('').map(() => '<span class="star empty">☆</span>').join('');
+  if (!rating) return '<span class="star">&#9734;</span><span class="star">&#9734;</span><span class="star">&#9734;</span><span class="star">&#9734;</span><span class="star">&#9734;</span>';
+  return Array(rating).fill('<span class="star">&#9733;</span>').join('') + Array(5 - rating).fill('<span class="star empty">&#9734;</span>').join('');
 }
 
 function formatDate(dateStr) {

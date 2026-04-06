@@ -52,12 +52,16 @@ const authBtn = document.getElementById('authBtn');
 const authBtnLabel = document.getElementById('authBtnLabel');
 
 // Initialize Supabase
+let supabaseInitialized = false;
+
 function initSupabase() {
   try {
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabaseInitialized = true;
     console.log('Supabase initialized successfully');
   } catch (err) {
     console.error('Supabase init failed:', err);
+    supabaseInitialized = false;
   }
 }
 
@@ -253,9 +257,10 @@ async function signUp(email, password, name) {
 
 // Sign In
 async function signIn(email, password) {
-  if (!supabaseClient) {
-    showAuthMessage('Cloud sync not available');
-    return { error: 'No supabase client' };
+  if (!supabaseClient || !supabaseInitialized) {
+    showAuthMessage('Cloud sync not available. Please check your internet connection.', 'error');
+    console.error('Supabase not initialized');
+    return { error: 'Not initialized' };
   }
   
   const { data, error } = await supabaseClient.auth.signInWithPassword({
@@ -423,7 +428,15 @@ function setupEventListeners() {
     const email = document.getElementById('authEmail').value;
     const password = document.getElementById('authPassword').value;
     showAuthMessage('Signing in...', 'success');
+    console.log('Login form submitted, email:', email);
+    if (!supabaseClient) {
+      showAuthMessage('Supabase not initialized', 'error');
+      console.error('Supabase client is null!');
+      return;
+    }
+    console.log('Calling signIn...');
     const { error } = await signIn(email, password);
+    console.log('signIn completed, error:', error);
     if (!error) {
       closeAuthModal();
     }

@@ -206,6 +206,14 @@ function setRating(rating) {
   });
 }
 
+// Add click listeners to stars
+document.querySelectorAll('.rating-input .star').forEach(star => {
+  star.addEventListener('click', () => {
+    const rating = parseInt(star.dataset.rating);
+    setRating(rating);
+  });
+});
+
   // Photo preview
   document.getElementById('photo').addEventListener('change', (e) => {
     const file = e.target.files[0];

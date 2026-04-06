@@ -150,20 +150,25 @@ function saveCollection() {
 // Auth Modal Functions
 async function openAuthModal() {
   authModal.classList.remove('hidden');
+  authMessage.classList.add('hidden');
   
   // Check current session before deciding which UI to show
   if (supabaseClient) {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-    if (session?.user) {
-      currentUser = {
-        id: session.user.id,
-        email: session.user.email,
-        name: session.user.user_metadata?.name || ''
-      };
-      syncEnabled = true;
-      updateAuthButton();
-      showLoggedInUI();
-      return;
+    try {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session?.user) {
+        currentUser = {
+          id: session.user.id,
+          email: session.user.email,
+          name: session.user.user_metadata?.name || ''
+        };
+        syncEnabled = true;
+        updateAuthButton();
+        showLoggedInUI();
+        return;
+      }
+    } catch (err) {
+      console.error('Error getting session:', err);
     }
   }
   
@@ -277,6 +282,7 @@ async function signOut() {
   currentUser = null;
   syncEnabled = false;
   updateAuthButton();
+  showLoggedOutUI();
   closeAuthModal();
 }
 
@@ -440,7 +446,6 @@ function setupEventListeners() {
 
   logoutBtn.addEventListener('click', async () => {
     await signOut();
-    showLoggedOutUI();
   });
 
   searchInput.addEventListener('input', renderCollection);

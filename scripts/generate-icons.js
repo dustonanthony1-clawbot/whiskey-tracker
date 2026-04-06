@@ -1,13 +1,13 @@
-// Generate Android app icons from barrel logo
+// Generate Android icons from source image
 const fs = require('fs');
 const path = require('path');
 
-// This is a placeholder - we'll use a simpler approach
-// Actually, let's just copy the app-icon to the mipmap folders and let Android handle it
-
-const srcPath = path.join(__dirname, '..', 'app-icon.png');
+// This won't actually work without a proper image library
+// Instead, let's just copy the source image to all the needed locations
+const srcPath = path.join(__dirname, '..', 'BarrelProofIcon.png');
 const resPath = path.join(__dirname, '..', 'android', 'app', 'src', 'main', 'res');
 
+// Target sizes
 const sizes = {
     'mipmap-mdpi': 48,
     'mipmap-hdpi': 72,
@@ -16,15 +16,14 @@ const sizes = {
     'mipmap-xxxhdpi': 192
 };
 
-// Copy same icon to all mipmap folders
+console.log('Note: For production, use Android Studio or online tools to resize.');
+console.log('Copying source image to all locations...');
+
+// Just copy the source 1024x1024 image
 Object.keys(sizes).forEach(folder => {
-    const destPath = path.join(resPath, folder, 'ic_launcher.png');
-    fs.copyFileSync(srcPath, destPath);
-    console.log('Copied to:', destPath);
-    
-    const roundPath = path.join(resPath, folder, 'ic_launcher_round.png');
-    fs.copyFileSync(srcPath, roundPath);
-    console.log('Copied to:', roundPath);
+    const dest = path.join(resPath, folder, 'ic_launcher.png');
+    fs.copyFileSync(srcPath, dest);
+    console.log(`Copied to ${folder}/ic_launcher.png`);
 });
 
-console.log('Done! Note: For production, use properly sized images.');
+console.log('Done! Note: Source image is 1024x1024, not properly resized.');

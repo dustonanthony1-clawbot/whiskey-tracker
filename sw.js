@@ -1,4 +1,4 @@
-const CACHE_NAME = 'whiskey-tracker-v9';
+const CACHE_NAME = 'whiskey-tracker-v10';
 const urlsToCache = [
   '/',
   '/index.html',

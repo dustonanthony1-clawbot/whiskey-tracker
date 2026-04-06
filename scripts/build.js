@@ -23,6 +23,7 @@ if (fs.existsSync(supabaseSrc)) {
 // Files and folders to copy
 const filesToCopy = [
   'index.html',
+  'privacy.html',
   'app.js',
   'styles.css',
   'whiskey-db.js',

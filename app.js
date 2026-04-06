@@ -409,7 +409,10 @@ function setupEventListeners() {
     showAuthMessage('Creating account...', 'success');
     const { error } = await signUp(email, password, name);
     if (!error) {
-      showAuthMessage('Account created! Check your email to confirm.', 'success');
+      showAuthMessage('Account created! Check your email to verify.', 'success');
+    setTimeout(() => {
+      closeAuthModal();
+    }, 2000);
     }
   });
 

@@ -148,13 +148,29 @@ function saveCollection() {
 }
 
 // Auth Modal Functions
-function openAuthModal() {
+async function openAuthModal() {
   authModal.classList.remove('hidden');
-  if (currentUser) {
-    showLoggedInUI();
-  } else {
-    showLoggedOutUI();
+  
+  // Check current session before deciding which UI to show
+  if (supabaseClient) {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session?.user) {
+      currentUser = {
+        id: session.user.id,
+        email: session.user.email,
+        name: session.user.user_metadata?.name || ''
+      };
+      syncEnabled = true;
+      updateAuthButton();
+      showLoggedInUI();
+      return;
+    }
   }
+  
+  currentUser = null;
+  syncEnabled = false;
+  updateAuthButton();
+  showLoggedOutUI();
 }
 
 function closeAuthModal() {

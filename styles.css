@@ -979,13 +979,11 @@ textarea {
 .sync-status {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 16px;
-  background: var(--bg-card);
-  border-radius: var(--radius-md);
-  margin-bottom: 20px;
+  gap: 8px;
+  padding: 8px 0;
   font-size: 0.9rem;
   color: var(--text-secondary);
+  margin-bottom: 16px;
 }
 
 .sync-icon {
